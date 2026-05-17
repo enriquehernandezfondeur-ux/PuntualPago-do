@@ -1,0 +1,24 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/update-overdue",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/emails/cron-reminders",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/whatsapp-reminders",
+      "schedule": "0 19 * * *"
+    },
+    {
+      "path": "/api/payouts/generate-monthly",
+      "schedule": "0 14 1 * *"
+    },
+    {
+      "path": "/api/cron/monthly-owner-report",
+      "schedule": "0 14 2 * *"
+    }
+  ]
+}

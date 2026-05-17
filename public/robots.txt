@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /portal/
+Disallow: /login
+Disallow: /registro
+
+Sitemap: https://puntualpago.do/sitemap.xml

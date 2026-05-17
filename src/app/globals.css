@@ -1,0 +1,361 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap');
+/* Landing page también usa Inter — sin fallback a system-ui que puede verse distinto */
+
+/* ─── Design Tokens ───────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Surfaces */
+    --bg:           #F7F8FA;
+    --surface:      #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --surface-subtle: #F9FAFB;
+
+    /* Borders */
+    --border:       #E4E7EC;
+    --border-subtle:#F2F4F7;
+    --border-strong:#C4CAD4;
+
+    /* Text */
+    --text:         #101828;
+    --text-secondary:#475467;
+    --text-tertiary: #98A2B3;
+    --text-placeholder:#D0D5DD;
+
+    /* Brand */
+    --blue:         #1570EF;
+    --blue-hover:   #175CD3;
+    --blue-bg:      #EFF8FF;
+    --blue-text:    #175CD3;
+
+    /* Semantic status colors */
+    --success:       #027A48;
+    --success-bg:    #ECFDF3;
+    --success-border:#A9EFC5;
+    --error:         #B42318;
+    --error-bg:      #FEF3F2;
+    --error-border:  #FECDCA;
+    --warning:       #B54708;
+    --warning-bg:    #FFFAEB;
+    --warning-border:#FEDF89;
+    --info:          #175CD3;
+    --info-bg:       #EFF8FF;
+    --info-border:   #B2DDFF;
+
+    /* Focus ring */
+    --ring: rgba(21,112,239,0.25);
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* Radix/shadcn mappings */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 6%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 6%;
+    --primary: 214 90% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 13% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 13% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 214 90% 52%;
+  }
+}
+
+/* ─── Dark Mode ─────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:              #0C0E12;
+  --surface:         #131620;
+  --surface-raised:  #1A1E2A;
+  --surface-subtle:  #161922;
+
+  --border:          #242836;
+  --border-subtle:   #1C2030;
+  --border-strong:   #343A4A;
+
+  --text:            #F0F2F8;
+  --text-secondary:  #8B93A8;
+  --text-tertiary:   #505870;
+  --text-placeholder:#3A4058;
+
+  --blue:            #3B82F6;
+  --blue-hover:      #2563EB;
+  --blue-bg:         #1A2540;
+  --blue-text:       #93C5FD;
+
+  --ring: rgba(59,130,246,0.3);
+
+  --success:       #12B76A;
+  --success-bg:    #1A2E22;
+  --success-border:#1F4032;
+  --error:         #F97066;
+  --error-bg:      #2E1A1A;
+  --error-border:  #4A2020;
+  --warning:       #FDB022;
+  --warning-bg:    #2E2210;
+  --warning-border:#4A3A10;
+  --info:          #93C5FD;
+  --info-bg:       #1A2540;
+  --info-border:   #1E3A6E;
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────── */
+@layer base {
+  * { box-sizing: border-box; }
+
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: "cv02","cv03","cv04","cv11";
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Better focus outline */
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+}
+
+/* ─── Typography utilities ──────────────────────────────────── */
+@layer utilities {
+  /* Headings */
+  .t-heading {
+    @apply font-semibold tracking-tight;
+    color: var(--text);
+  }
+  .t-label {
+    @apply text-xs font-medium uppercase tracking-wider;
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
+  }
+  .t-mono {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8125em;
+  }
+
+  /* Surfaces */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+  }
+  .card-sm {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+  }
+
+  /* Scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar       { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Interactive row */
+  .row-interactive {
+    @apply transition-colors cursor-pointer;
+  }
+  .row-interactive:hover {
+    background: var(--surface-subtle);
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply rounded animate-pulse;
+    background: linear-gradient(90deg, #F3F4F6 25%, #E9EAEC 50%, #F3F4F6 75%);
+    background-size: 400% 100%;
+    animation: skeleton-wave 1.6s ease-in-out infinite;
+  }
+  @keyframes skeleton-wave {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Mobile: hide non-essential table columns */
+  @media (max-width: 768px) {
+    .hide-mobile { display: none !important; }
+    .card-mobile { @apply block; }
+  }
+
+  /* ─── Page entry animation ────────────────────────────────────────────── */
+  @keyframes page-enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+
+  .animate-page-enter {
+    animation: page-enter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  /* ─── Skeleton dark mode ─────────────────────────────────────────────── */
+  [data-theme="dark"] .skeleton {
+    background: linear-gradient(90deg, #1C2030 25%, #242836 50%, #1C2030 75%);
+    background-size: 400% 100%;
+    animation: skeleton-wave 1.6s ease-in-out infinite;
+  }
+
+  /* ─── Scrollbar dark mode ────────────────────────────────────────────── */
+  [data-theme="dark"] .scrollbar-thin {
+    scrollbar-color: #343A4A transparent;
+  }
+  [data-theme="dark"] .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #343A4A;
+  }
+
+  /* ─── Table row hover — consistent ──────────────────────────────────── */
+  .table-row-hover:hover {
+    background: var(--surface-subtle);
+  }
+
+  /* ─── Button base — reusable ─────────────────────────────────────────── */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    color: #fff; background: #1570EF;
+    border: none; cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #175CD3; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--surface-subtle);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { background: var(--border); color: var(--text); }
+
+  /* Safe area for mobile devices with notch */
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+  /* ─── Date inputs — solo normalizar el calendario nativo ─────────────── */
+
+  /* Fuente consistente en inputs (sin sobreescribir estilos de componentes) */
+  input, select, textarea {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Date input — color-scheme para que el picker coincida con el tema */
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"] {
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] input[type="date"],
+  [data-theme="dark"] input[type="datetime-local"],
+  [data-theme="dark"] input[type="month"] {
+    color-scheme: dark;
+  }
+
+  /* Ícono del calendario — opacidad suavizada */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.45;
+    cursor: pointer;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.85;
+  }
+
+  /* Number — large metric display */
+  .metric-value {
+    font-size: 1.625rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .metric-value-sm {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  /* ─── Hover utility ─────────────────────────────────────────── */
+  .hover-surface { transition: background 0.15s ease; }
+  .hover-surface:hover { background-color: var(--surface-subtle); }
+}
+
+/* ─── Dark mode — override Tailwind portal classes ────────────────────────── */
+/*
+   El CRM usa CSS vars directamente (var(--surface), etc.).
+   Los portales usan clases Tailwind (bg-white, text-slate-X).
+   Este bloque los adapta al dark mode sin tocar cada componente.
+*/
+[data-theme="dark"] {
+  /* Fondos */
+  .bg-white       { background-color: var(--surface) !important; }
+  .bg-slate-50    { background-color: var(--surface-subtle) !important; }
+  .bg-slate-100   { background-color: var(--surface-raised) !important; }
+
+  /* Bordes */
+  .border-slate-100 { border-color: var(--border-subtle) !important; }
+  .border-slate-200 { border-color: var(--border) !important; }
+  .border-slate-300 { border-color: var(--border-strong) !important; }
+
+  /* Divisores */
+  .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border-subtle) !important; }
+  .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: var(--border) !important; }
+
+  /* Texto */
+  .text-slate-900 { color: var(--text) !important; }
+  .text-slate-800 { color: var(--text) !important; }
+  .text-slate-700 { color: var(--text) !important; }
+  .text-slate-600 { color: var(--text-secondary) !important; }
+  .text-slate-500 { color: var(--text-secondary) !important; }
+  .text-slate-400 { color: var(--text-tertiary) !important; }
+  .text-slate-300 { color: var(--text-tertiary) !important; }
+
+  /* Hover fondos */
+  .hover\:bg-slate-50:hover  { background-color: var(--surface-subtle) !important; }
+  .hover\:bg-slate-100:hover { background-color: var(--surface-raised) !important; }
+  .hover\:bg-slate-200:hover { background-color: var(--border) !important; }
+
+  /* Inputs */
+  input.border-slate-200,
+  textarea.border-slate-200,
+  select.border-slate-200 {
+    background-color: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+  }
+
+  /* Tab activo */
+  .bg-slate-100 { background-color: var(--surface-subtle) !important; }
+}
