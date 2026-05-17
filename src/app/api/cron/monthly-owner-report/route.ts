@@ -11,8 +11,13 @@
  * Cron schedule: 0 14 2 * * (10am hora RD = 14:00 UTC, día 2 de cada mes)
  */
 import { NextRequest, NextResponse } from 'next/server'
+import { timingSafeEqual } from 'crypto'
 import { createClient } from '@/lib/supabase/server'
 import { resend, FROM_EMAIL, REPLY_TO } from '@/lib/email/resend'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 import { monthlyOwnerReportTemplate } from '@/lib/email/templates'
 import type { MonthlyOwnerReportPropertyRow } from '@/lib/email/templates'
 
@@ -25,7 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'CRON_SECRET no configurado' }, { status: 500 })
   }
 
-  const valid = authHeader === `Bearer ${process.env.CRON_SECRET}` || cronHeader === process.env.CRON_SECRET
+  const valid = safeCompare(authHeader, `Bearer ${process.env.CRON_SECRET}`) || safeCompare(cronHeader, process.env.CRON_SECRET)
   if (!valid) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
   if (!process.env.RESEND_API_KEY) {

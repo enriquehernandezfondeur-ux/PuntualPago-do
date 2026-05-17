@@ -5,13 +5,19 @@ import { paymentConfirmTemplate } from '@/lib/email/templates'
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const isCron = req.headers.get('x-cron-secret') === process.env.CRON_SECRET
+    if (!user && !isCron) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
     const { paymentId } = await req.json()
 
     if (!paymentId) {
       return NextResponse.json({ error: 'paymentId requerido' }, { status: 400 })
     }
-
-    const supabase = await createClient()
 
     const { data: payment, error } = await supabase
       .from('payments')
@@ -64,8 +70,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Error al enviar email', detail: emailError }, { status: 500 })
     }
 
-    const { data: { user } } = await supabase.auth.getUser()
-
     await supabase.from('communications').insert({
       channel: 'email',
       direction: 'outbound',
@@ -78,7 +82,7 @@ export async function POST(req: NextRequest) {
       owner_id: owner?.id ?? null,
       sent_at: new Date().toISOString(),
       delivered: true,
-      created_by: user?.id ?? null,
+      created_by: (await supabase.auth.getUser()).data.user?.id ?? null,
     })
 
     return NextResponse.json({ success: true, emailId: emailData?.id, recipients })

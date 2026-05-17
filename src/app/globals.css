@@ -347,6 +347,14 @@
   .hover\:bg-slate-100:hover { background-color: var(--surface-raised) !important; }
   .hover\:bg-slate-200:hover { background-color: var(--border) !important; }
 
+  /* Dark backgrounds (contact sections, dark cards) */
+  .bg-slate-600  { background-color: var(--surface-raised) !important; }
+  .bg-slate-700  { background-color: var(--surface-raised) !important; }
+  .bg-slate-800  { background-color: var(--surface) !important; }
+  .bg-slate-900  { background-color: var(--surface-subtle) !important; }
+  .hover\:bg-slate-600:hover { background-color: var(--border) !important; }
+  .hover\:bg-slate-700:hover { background-color: var(--border) !important; }
+
   /* Inputs */
   input.border-slate-200,
   textarea.border-slate-200,

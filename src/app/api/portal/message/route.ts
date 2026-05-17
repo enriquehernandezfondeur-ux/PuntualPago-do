@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
 
   if (staffUsers?.length) {
     const roleLabel = profile.role === 'propietario' ? 'propietario' : 'inquilino'
-    await supabase.from('notifications').insert(
+    const { error: notifErr } = await supabase.from('notifications').insert(
       staffUsers.map(u => ({
         user_id:     u.id,
         title:       `Mensaje de ${roleLabel}: ${entityName}`,
@@ -111,6 +111,7 @@ export async function POST(req: NextRequest) {
         entity_id:   ownerId ?? tenantId,
       }))
     )
+    if (notifErr) console.error('[portal/message] notifications insert failed:', notifErr.message)
   }
 
   return NextResponse.json({ success: true, id: comm.id })

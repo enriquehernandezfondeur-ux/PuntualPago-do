@@ -102,9 +102,11 @@ export async function POST(req: NextRequest) {
     created_by:  user.id,
   }).then(({ error }) => { if (error) console.error('[audit_logs]', error.message) })
 
+  const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://puntualpago.do'
+
   // Email confirmation (fire and forget)
   if (sendEmail && isFullPayment) {
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/api/emails/send-confirmation`, {
+    fetch(`${SITE}/api/emails/send-confirmation`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ paymentId }),
@@ -113,7 +115,7 @@ export async function POST(req: NextRequest) {
 
   // Recalculate risk score (fire and forget)
   if (payment.tenant_id) {
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/api/risk/calculate`, {
+    fetch(`${SITE}/api/risk/calculate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tenantId: payment.tenant_id }),
@@ -121,7 +123,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Notify admins
-  fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/api/notifications/create`, {
+  fetch(`${SITE}/api/notifications/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET ?? '' },
     body: JSON.stringify({

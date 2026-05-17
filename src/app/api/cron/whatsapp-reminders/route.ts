@@ -9,6 +9,11 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { timingSafeEqual } from 'crypto'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 
 const TWILIO_SID   = process.env.TWILIO_ACCOUNT_SID
 const TWILIO_TOKEN = process.env.TWILIO_AUTH_TOKEN
@@ -42,7 +47,7 @@ export async function GET(req: NextRequest) {
   if (!process.env.CRON_SECRET || process.env.CRON_SECRET === 'change-me-to-a-strong-random-secret') {
     return NextResponse.json({ error: 'CRON_SECRET no configurado' }, { status: 500 })
   }
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}` && cronHeader !== process.env.CRON_SECRET) {
+  if (!safeCompare(authHeader, `Bearer ${process.env.CRON_SECRET}`) && !safeCompare(cronHeader, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   }
 
