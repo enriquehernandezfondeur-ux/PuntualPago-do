@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { createClient, getOrgFilter, withOrg } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/Header'
 import { PropietariosContent } from '@/components/propietarios/PropietariosContent'

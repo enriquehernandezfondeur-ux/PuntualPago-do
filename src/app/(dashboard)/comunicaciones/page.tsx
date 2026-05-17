@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { Header } from '@/components/layout/Header'
 import { createClient } from '@/lib/supabase/server'
 import { ComunicacionesContent } from '@/components/comunicaciones/ComunicacionesContent'

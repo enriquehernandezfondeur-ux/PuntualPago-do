@@ -68,8 +68,9 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const isLogin   = path.startsWith('/login')
-  const isPublic  = path === '/' || path.startsWith('/registro')  // Landing y registro son públicos
+  const isLogin    = path.startsWith('/login')
+  const isRegistro = path.startsWith('/registro')
+  const isPublic   = path === '/' || isRegistro || path.startsWith('/forgot-password') || path.startsWith('/reset-password')
 
   // Unauthenticated: redirect to login
   if (!user && !isLogin && !isPublic) {
@@ -90,8 +91,8 @@ export async function middleware(request: NextRequest) {
     profile = data ?? null
   }
 
-  // Authenticated user hitting login: redirect to their home based on role
-  if (user && isLogin) {
+  // Authenticated user hitting login or registro: redirect to their home
+  if (user && (isLogin || isRegistro)) {
     const url = request.nextUrl.clone()
     if (profile?.role === 'inquilino') {
       url.pathname = '/portal/inquilino'

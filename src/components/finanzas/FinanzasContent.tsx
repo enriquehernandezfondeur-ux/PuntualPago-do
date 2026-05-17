@@ -137,7 +137,7 @@ export function FinanzasContent({
               {/* Desktop table */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50 border-b border-slate-200">
+                  <thead className="border-b border-border">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Inquilino / Propiedad</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Propietario</th>
@@ -193,7 +193,7 @@ export function FinanzasContent({
             </div>
           ) : (
             pendingPayouts.map((payout: any) => (
-              <div key={payout.id} className="bg-white border border-amber-200 rounded-xl p-5">
+              <div key={payout.id} className="bg-surface border border-amber-200 rounded-xl p-5">
                 <div className="flex items-center justify-between gap-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
                     <div>
