@@ -84,7 +84,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin py-3 px-2.5 space-y-5">
+      <nav aria-label="Navegación principal" className="flex-1 overflow-y-auto scrollbar-thin py-3 px-2.5 space-y-5">
         {navItems.map((group) => (
           <div key={group.group}>
             <p
@@ -169,6 +169,7 @@ export function Sidebar() {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Ver página principal"
               title="Ver página principal"
               className="p-1.5 rounded transition"
               style={{ color: '#475569' }}
@@ -179,6 +180,7 @@ export function Sidebar() {
             </Link>
             <button
               onClick={handleSignOut}
+              aria-label="Cerrar sesión"
               title="Cerrar sesión"
               className="p-1.5 rounded transition"
               style={{ color: '#475569' }}
