@@ -3,6 +3,7 @@ import { Header } from '@/components/layout/Header'
 import { ContratosContent } from '@/components/contratos/ContratosContent'
 import { NewLeaseButton } from '@/components/contratos/NewLeaseButton'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Contratos' }
 
 export default async function ContratosPage() {

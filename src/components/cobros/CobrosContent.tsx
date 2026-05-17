@@ -228,6 +228,8 @@ export function CobrosContent({ payments, cobrosUsers }: Props) {
           style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}
         >
           <div
+            role="group"
+            aria-label="Filtrar por estado"
             className="flex items-center gap-px p-1 rounded-lg"
             style={{ background: 'var(--surface-subtle)', border: '1px solid var(--border)' }}
           >
@@ -238,6 +240,7 @@ export function CobrosContent({ payments, cobrosUsers }: Props) {
                 <button
                   key={f.value}
                   onClick={() => setActiveFilter(f.value)}
+                  aria-pressed={activeFilter === f.value}
                   className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all"
                   style={active
                     ? { background: 'var(--surface)', color: 'var(--text)', boxShadow: '0 1px 2px rgba(16,24,40,0.08)' }

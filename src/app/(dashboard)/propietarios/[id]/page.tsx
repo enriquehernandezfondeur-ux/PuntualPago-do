@@ -2,11 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { OwnerProfileWrapper } from '@/components/profiles/OwnerProfileWrapper'
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const supabase = await createClient()
-  const { data } = await supabase.from('owners').select('full_name').eq('id', params.id).single()
-  return { title: data?.full_name ?? 'Propietario' }
-}
+export const dynamic = 'force-dynamic'
+export const metadata = { title: 'Perfil de Propietario' }
 
 export default async function OwnerProfilePage({ params }: { params: { id: string } }) {
   const supabase = await createClient()

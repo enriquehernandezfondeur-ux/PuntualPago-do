@@ -312,6 +312,34 @@
   .hover-surface:hover { background-color: var(--surface-subtle); }
 }
 
+/* ─── Print styles ──────────────────────────────────────────────────────────
+   Oculta la navegación del CRM al imprimir reportes con window.print().
+   El sidebar es un <aside> y el header es un <header>, así que los
+   selectors de elemento son suficientes sin depender de clases.
+─────────────────────────────────────────────────────────────────────────── */
+@media print {
+  /* Ocultar navegación global */
+  aside,
+  header,
+  nav { display: none !important; }
+
+  /* Fondo blanco limpio */
+  body,
+  html { background: white !important; color: #000 !important; }
+
+  /* El área de contenido ocupa todo el ancho */
+  main { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+
+  /* Eliminar sombras y bordes decorativos */
+  * { box-shadow: none !important; text-shadow: none !important; }
+
+  /* Evitar cortes de página dentro de filas de tabla o tarjetas */
+  tr, .card, .card-sm { break-inside: avoid; }
+
+  /* URLs de enlaces — no mostrarlas al imprimir */
+  a[href]::after { content: none !important; }
+}
+
 /* ─── Dark mode — override Tailwind portal classes ────────────────────────── */
 /*
    El CRM usa CSS vars directamente (var(--surface), etc.).
@@ -366,4 +394,14 @@
 
   /* Tab activo */
   .bg-slate-100 { background-color: var(--surface-subtle) !important; }
+}
+
+/* ── Print styles ─────────────────────────────────────────────────────────── */
+@media print {
+  aside, nav, header, [data-sidebar], .sidebar-wrapper { display: none !important; }
+  body, html { background: #fff !important; color: #000 !important; }
+  main { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  * { box-shadow: none !important; }
+  tr, .rounded-xl, .rounded-2xl { break-inside: avoid; }
+  a[href]::after { content: none !important; }
 }

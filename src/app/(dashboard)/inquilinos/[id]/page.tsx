@@ -2,11 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { TenantProfileWrapper } from '@/components/profiles/TenantProfileWrapper'
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const supabase = await createClient()
-  const { data } = await supabase.from('tenants').select('full_name').eq('id', params.id).single()
-  return { title: data?.full_name ?? 'Inquilino' }
-}
+export const dynamic = 'force-dynamic'
+export const metadata = { title: 'Perfil de Inquilino' }
 
 export default async function TenantProfilePage({ params }: { params: { id: string } }) {
   const supabase = await createClient()
@@ -23,7 +20,7 @@ export default async function TenantProfilePage({ params }: { params: { id: stri
   ] = await Promise.all([
     supabase.from('tenants').select('*').eq('id', params.id).single(),
     supabase.from('leases').select('*, property:properties(id, name, address)').eq('tenant_id', params.id).order('start_date', { ascending: false }),
-    supabase.from('payments').select('*').eq('tenant_id', params.id).order('period_year', { ascending: false }).order('period_month', { ascending: false }),
+    supabase.from('payments').select('id, payment_number, period_year, period_month, rent_amount, late_fee, balance_due, amount_paid, status, due_date, paid_date, currency, days_overdue, covered_by_guarantee').eq('tenant_id', params.id).order('period_year', { ascending: false }).order('period_month', { ascending: false }).limit(60),
     supabase.from('communications').select('*').eq('tenant_id', params.id).order('created_at', { ascending: false }).limit(50),
     supabase.from('documents').select('*').eq('tenant_id', params.id).order('created_at', { ascending: false }),
     supabase.from('legal_cases').select('*, property:properties(name)').eq('tenant_id', params.id).order('opened_date', { ascending: false }),
@@ -37,7 +34,7 @@ export default async function TenantProfilePage({ params }: { params: { id: stri
     <TenantProfileWrapper
       tenant={tenant}
       leases={(leases ?? []) as any}
-      payments={payments ?? []}
+      payments={(payments ?? []) as any}
       communications={communications ?? []}
       documents={documents ?? []}
       legalCases={legalCases ?? []}

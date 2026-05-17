@@ -65,7 +65,13 @@ export function RegisterPaymentModal({ payment, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="rounded-2xl shadow-2xl w-full max-w-md" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Registrar pago"
+        className="rounded-2xl shadow-2xl w-full max-w-md"
+        style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--border)' }}>
           <div>
@@ -74,6 +80,7 @@ export function RegisterPaymentModal({ payment, onClose }: Props) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             className="p-1.5 rounded-lg transition"
             style={{ color: 'var(--text-tertiary)' }}
             onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-subtle)')}

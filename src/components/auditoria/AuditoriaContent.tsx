@@ -33,17 +33,24 @@ const ACTION_LABELS: Record<string, { label: string; color: string }> = {
 
 interface Props { logs: (AuditLog & { user?: { full_name: string; role: string } })[] }
 
+const PAGE_SIZE = 50
+
 export function AuditoriaContent({ logs }: Props) {
   const [search, setSearch] = useState('')
   const [actionFilter, setActionFilter] = useState('')
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   const filtered = useMemo(() => {
+    setVisibleCount(PAGE_SIZE)
     return logs.filter(l => {
       const matchSearch = !search || l.user?.full_name?.toLowerCase().includes(search.toLowerCase()) || l.action.toLowerCase().includes(search.toLowerCase()) || l.entity_type?.toLowerCase().includes(search.toLowerCase())
       const matchAction = !actionFilter || l.action === actionFilter
       return matchSearch && matchAction
     })
   }, [logs, search, actionFilter])
+
+  const visible = filtered.slice(0, visibleCount)
+  const hasMore = visibleCount < filtered.length
 
   const uniqueActions = Array.from(new Set(logs.map(l => l.action))).sort()
 
@@ -61,7 +68,9 @@ export function AuditoriaContent({ logs }: Props) {
           <option value="">Todas las acciones</option>
           {uniqueActions.map(a => <option key={a} value={a}>{ACTION_LABELS[a]?.label ?? a}</option>)}
         </select>
-        <p className="flex items-center text-xs" style={{ color: 'var(--text-tertiary)' }}>{filtered.length} registros</p>
+        <p className="flex items-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
+          Mostrando {Math.min(visibleCount, filtered.length)} de {filtered.length} registros
+        </p>
       </div>
 
       {/* Log table */}
@@ -75,11 +84,11 @@ export function AuditoriaContent({ logs }: Props) {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((log, i) => {
+            {visible.map((log, i) => {
               const cfg = ACTION_LABELS[log.action]
               const changedKeys = log.new_values ? Object.keys(log.new_values as object).slice(0, 3) : []
               return (
-                <tr key={log.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                <tr key={log.id} style={{ borderBottom: i < visible.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                   <td className="px-4 py-3">
                     <p className="text-xs" style={{ color: 'var(--text)' }}>{formatDate(log.created_at)}</p>
                     <p className="text-xs font-mono" style={{ color: 'var(--text-tertiary)', fontSize: '10px' }}>
@@ -122,12 +131,26 @@ export function AuditoriaContent({ logs }: Props) {
                 </tr>
               )
             })}
-            {filtered.length === 0 && (
+            {visible.length === 0 && (
               <tr><td colSpan={5} className="px-4 py-10 text-center text-sm" style={{ color: 'var(--text-tertiary)' }}>Sin registros</td></tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {hasMore && (
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
+            className="px-5 py-2 rounded-lg text-sm font-medium transition"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-subtle)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'var(--surface)')}
+          >
+            Cargar más ({filtered.length - visibleCount} restantes)
+          </button>
+        </div>
+      )}
     </div>
   )
 }

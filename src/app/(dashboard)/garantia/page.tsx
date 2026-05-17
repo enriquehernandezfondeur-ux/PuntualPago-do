@@ -2,6 +2,7 @@ import { createClient, getOrgFilter, withOrg } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/Header'
 import { GarantiaContent } from '@/components/garantia/GarantiaContent'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Garantía PuntualPago' }
 
 export default async function GarantiaPage() {
