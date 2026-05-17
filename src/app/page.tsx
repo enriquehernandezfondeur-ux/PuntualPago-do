@@ -273,7 +273,7 @@ export default function HomePage() {
 
         <div style={{ maxWidth: 860, margin: '0 auto', padding: 'clamp(90px,12vw,150px) 24px clamp(60px,8vw,100px)', textAlign: 'center', width: '100%' }}>
 
-          <h1 className="hero-line-2" style={{ fontSize: 'clamp(2rem,6vw,5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.08, letterSpacing: '-0.04em', margin: '0 0 20px' }}>
+          <h1 className="hero-line-2" style={{ fontSize: 'clamp(1.7rem,4.5vw,3.8rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 20px' }}>
             Cobra tu alquiler<br />aunque el inquilino{' '}
             <span style={{ background: 'linear-gradient(135deg,#0EA5E9,#38BDF8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>no pague.</span>
           </h1>
