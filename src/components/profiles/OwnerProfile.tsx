@@ -231,7 +231,7 @@ export function OwnerProfile({ owner, properties, payouts, communications, docum
 
 // ─── Liquidaciones tab con "Marcar pagado" ────────────────────────────────────
 
-const PAYMENT_METHODS = ['Transferencia', 'Cheque', 'Efectivo', 'Zelle', 'Otro']
+const PAYMENT_METHODS = ['Transferencia', 'Cheque', 'Efectivo', 'Otro']
 
 function LiquidacionesTab({ payouts, ownerId, ownerName }: {
   payouts: (OwnerPayout & { property?: any })[]; ownerId: string; ownerName: string

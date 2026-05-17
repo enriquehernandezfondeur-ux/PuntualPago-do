@@ -76,15 +76,18 @@ export function FinanzasContent({
           { key: 'mes',          label: `Cobros ${formatMonth(currentYear, currentMonth)}` },
           { key: 'liquidaciones',label: `Liquidaciones (${pendingPayouts.length})` },
           { key: 'mora',         label: `Morosidad (${overduePayments.length})` },
-          { key: 'garantia',     label: 'Garantía' },
+          { key: 'garantia',     label: 'Garantía', soon: true },
         ].map(t => (
-          <button key={t.key} onClick={() => setTab(t.key as typeof tab)}
-            className="px-3.5 py-1.5 rounded-lg text-sm font-medium transition"
+          <button key={t.key}
+            onClick={() => !('soon' in t && t.soon) && setTab(t.key as typeof tab)}
+            disabled={'soon' in t && t.soon}
+            className="px-3.5 py-1.5 rounded-lg text-sm font-medium transition disabled:cursor-not-allowed"
             style={tab === t.key
               ? { background: 'var(--surface)', color: 'var(--text)', boxShadow: '0 1px 2px rgba(16,24,40,0.08)' }
-              : { color: 'var(--text-tertiary)' }}
+              : { color: ('soon' in t && t.soon) ? 'var(--text-tertiary)' : 'var(--text-tertiary)', opacity: ('soon' in t && t.soon) ? 0.4 : 1 }}
+            title={'soon' in t && t.soon ? 'Próximamente' : undefined}
           >
-            {t.label}
+            {t.label}{'soon' in t && t.soon && <span className="ml-1 text-xs opacity-60">·soon</span>}
           </button>
         ))}
       </div>

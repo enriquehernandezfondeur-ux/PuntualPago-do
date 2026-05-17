@@ -504,9 +504,9 @@ function PayOwnerModal({ claim, onClose }: { claim: GuaranteeClaim; onClose: () 
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
-        <div className="flex items-center justify-between p-5 border-b border-slate-200">
-          <h2 className="font-bold text-slate-900">Pagar propietario</h2>
+      <div className="rounded-2xl shadow-2xl w-full max-w-sm" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+        <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--border)' }}>
+          <h2 className="font-bold" style={{ color: 'var(--text)' }}>Pagar propietario</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
             <X className="w-5 h-5" />
           </button>
