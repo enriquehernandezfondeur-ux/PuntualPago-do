@@ -67,7 +67,7 @@ export function ComunicacionesContent({ communications, stats }: Props) {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Stats bar */}
-        <div className="px-6 py-4 border-b border-slate-200 bg-white">
+        <div className="px-6 py-4 border-b border-border bg-surface">
           <div className="grid grid-cols-4 gap-3">
             {[
               { label: 'Total mensajes',  value: stats.total,    icon: MessageSquare, color: 'bg-blue-50',    iconColor: 'text-blue-600' },
@@ -75,7 +75,7 @@ export function ComunicacionesContent({ communications, stats }: Props) {
               { label: 'WhatsApp',        value: stats.whatsapp, icon: MessageCircle, color: 'bg-emerald-50', iconColor: 'text-emerald-600' },
               { label: 'Hoy',             value: stats.today,    icon: Clock,         color: 'bg-amber-50',   iconColor: 'text-amber-600' },
             ].map((item, i) => (
-              <div key={i} className="rounded-xl border border-slate-200 bg-white p-4 flex items-center gap-3">
+              <div key={i} className="rounded-xl border border-border bg-surface p-4 flex items-center gap-3">
                 <div className={cn('p-2 rounded-lg shrink-0', item.color)}>
                   <item.icon className={cn('w-4 h-4', item.iconColor)} />
                 </div>
@@ -89,7 +89,7 @@ export function ComunicacionesContent({ communications, stats }: Props) {
         </div>
 
         {/* Filters */}
-        <div className="px-6 py-3 border-b border-slate-200 bg-white flex items-center gap-3">
+        <div className="px-6 py-3 border-b border-border bg-surface flex items-center gap-3">
           <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 shrink-0">
             {(['todos', 'email', 'whatsapp', 'llamada', 'sms', 'nota_interna'] as FilterChannel[]).map(ch => {
               const active = channelFilter === ch
@@ -101,7 +101,7 @@ export function ComunicacionesContent({ communications, stats }: Props) {
                   onClick={() => setChannelFilter(ch)}
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
-                    active ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'
+                    active ? 'bg-surface shadow-sm' : 'text-slate-500 hover:text-slate-700'
                   )}
                 >
                   {cfg && <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', cfg.dot)} />}
@@ -135,7 +135,7 @@ export function ComunicacionesContent({ communications, stats }: Props) {
         </div>
 
         {/* List */}
-        <div className="flex-1 overflow-y-auto bg-slate-50/50">
+        <div className="flex-1 overflow-y-auto bg-[var(--bg)]">
           {filtered.length === 0 ? (
             <EmptyState hasFilter={channelFilter !== 'todos' || search !== ''} />
           ) : (
@@ -181,7 +181,7 @@ function CommRow({ comm, isSelected, onClick }: { comm: Communication; isSelecte
       onClick={onClick}
       className={cn(
         'px-6 py-4 cursor-pointer transition-colors flex items-start gap-4',
-        isSelected ? 'bg-blue-50' : 'bg-white hover:bg-slate-50'
+        isSelected ? 'bg-blue-50' : 'bg-surface hover:bg-[var(--surface-subtle)]'
       )}
     >
       {/* Channel icon */}
@@ -239,7 +239,7 @@ function CommDetailPanel({ comm, onClose }: { comm: Communication; onClose: () =
   const prop   = comm.property as any
 
   return (
-    <aside className="w-80 bg-white border-l border-slate-200 flex flex-col shrink-0">
+    <aside className="w-80 bg-surface border-l flex flex-col shrink-0">
       {/* Header */}
       <div className="p-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2">

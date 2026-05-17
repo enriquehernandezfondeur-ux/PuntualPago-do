@@ -9,18 +9,20 @@ interface Props {
   onClose: () => void
   children: React.ReactNode
   size?: 'sm' | 'md' | 'lg'
+  loading?: boolean
 }
 
-export function FormModal({ title, subtitle, open, onClose, children, size = 'md' }: Props) {
+export function FormModal({ title, subtitle, open, onClose, children, size = 'md', loading }: Props) {
   if (!open) return null
 
   const widths = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl' }
+  const handleClose = () => { if (!loading) onClose() }
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(2px)' }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
     >
       <div
         className={cn('w-full rounded-2xl overflow-hidden shadow-2xl animate-fade-in', widths[size])}
@@ -33,8 +35,9 @@ export function FormModal({ title, subtitle, open, onClose, children, size = 'md
             {subtitle && <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{subtitle}</p>}
           </div>
           <button
-            onClick={onClose}
-            className="p-1 rounded-md transition mt-0.5"
+            onClick={handleClose}
+            disabled={loading}
+            className="p-1 rounded-md transition mt-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
             onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-subtle)')}
             onMouseLeave={e => (e.currentTarget.style.background = '')}
           >

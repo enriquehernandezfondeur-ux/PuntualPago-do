@@ -19,37 +19,22 @@ export default async function ComunicacionesPage() {
     .order('created_at', { ascending: false })
     .limit(200)
 
-  // Stats
-  const { count: totalCount } = await supabase
-    .from('communications')
-    .select('id', { count: 'exact', head: true })
-
-  const { count: emailCount } = await supabase
-    .from('communications')
-    .select('id', { count: 'exact', head: true })
-    .eq('channel', 'email')
-
-  const { count: whatsappCount } = await supabase
-    .from('communications')
-    .select('id', { count: 'exact', head: true })
-    .eq('channel', 'whatsapp')
-
-  const { count: todayCount } = await supabase
-    .from('communications')
-    .select('id', { count: 'exact', head: true })
-    .gte('created_at', new Date(new Date().setHours(0, 0, 0, 0)).toISOString())
+  // Derivar stats del array ya cargado — evita 4 queries extra a la DB
+  const comms = communications ?? []
+  const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0)
+  const stats = {
+    total:    comms.length,
+    email:    comms.filter(c => c.channel === 'email').length,
+    whatsapp: comms.filter(c => c.channel === 'whatsapp').length,
+    today:    comms.filter(c => new Date(c.created_at) >= todayStart).length,
+  }
 
   return (
     <>
       <Header title="Comunicaciones" subtitle="Historial de contacto con inquilinos y propietarios" />
       <ComunicacionesContent
-        communications={(communications ?? []) as unknown as Communication[]}
-        stats={{
-          total: totalCount ?? 0,
-          email: emailCount ?? 0,
-          whatsapp: whatsappCount ?? 0,
-          today: todayCount ?? 0,
-        }}
+        communications={comms as unknown as Communication[]}
+        stats={stats}
       />
     </>
   )

@@ -58,6 +58,7 @@ export default async function DashboardPage() {
     withOrg(supabase
       .from('payments')
       .select('period_year, period_month, status, amount_paid, balance_due, rent_amount, currency')
+      .gte('period_year', new Date().getFullYear() - 1)
       .order('period_year').order('period_month'), orgId),
     withOrg(supabase
       .from('properties')
