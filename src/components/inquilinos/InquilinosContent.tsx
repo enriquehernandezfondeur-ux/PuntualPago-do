@@ -25,7 +25,20 @@ export function InquilinosContent({ tenants }: Props) {
   const counts: Record<string, number> = { todos: tenants.length }
   for (const t of tenants) counts[t.status] = (counts[t.status] ?? 0) + 1
 
-  if (!tenants.length) return <div className="p-6"><EmptyState icon={UserCheck} title="Sin inquilinos" description="Crea el primer inquilino." /></div>
+  if (!tenants.length) return (
+    <div className="p-6">
+      <EmptyState
+        icon={UserCheck}
+        title="Sin inquilinos"
+        description="Crea el primer inquilino para empezar a gestionar contratos y cobros."
+        action={
+          <a href="/inquilinos/nuevo" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: '#1570EF' }}>
+            + Crear primer inquilino
+          </a>
+        }
+      />
+    </div>
+  )
 
   return (
     <div className="space-y-4">

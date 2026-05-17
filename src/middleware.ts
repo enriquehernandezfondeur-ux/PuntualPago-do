@@ -121,7 +121,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Dashboard routes: block portal-only users from accessing admin
-  if (user && path.startsWith('/dashboard') || (user && !path.startsWith('/portal') && !isLogin && !isPublic)) {
+  if (user && (path.startsWith('/dashboard') || (!path.startsWith('/portal') && !isLogin && !isPublic))) {
     const isPortalPath = path.startsWith('/portal')
     if (!isPortalPath) {
       if (profile?.role === 'inquilino') {

@@ -23,8 +23,8 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           <button onClick={reset} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1570EF' }}>
             <RefreshCw className="w-4 h-4" /> Reintentar
           </button>
-          <Link href="/dashboard" className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium border" style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
-            Ir al dashboard
+          <Link href="/" className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium border" style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
+            Ir al inicio
           </Link>
         </div>
       </div>

@@ -63,6 +63,7 @@ export function ComprobanteUpload({ tenantId, tenantName, leaseId, propertyId, p
     if (!file) { setErrorMsg('Selecciona un archivo'); return }
     if (!selectedPaymentId) { setErrorMsg('Selecciona el pago correspondiente'); return }
     if (!ALLOWED_TYPES.includes(file.type)) { setErrorMsg('Tipo de archivo no permitido'); return }
+    if (!method) { setErrorMsg('Selecciona el método de pago'); return }
 
     setState('uploading')
     setErrorMsg('')

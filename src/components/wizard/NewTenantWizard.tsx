@@ -328,7 +328,7 @@ export function NewTenantWizard({ properties, owners, buildings }: Props) {
               <button onClick={() => { setError(''); setStep(1) }} className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
                 <ArrowLeft className="w-3.5 h-3.5" /> Atrás
               </button>
-              <button onClick={() => { if (!lease.property_id || !lease.owner_id || !lease.start_date || !lease.end_date) { setError('Completa todos los campos obligatorios'); return } setError(''); setStep(3) }}
+              <button onClick={() => { if (!lease.property_id || !lease.owner_id || !lease.start_date || !lease.end_date || !lease.rent_amount || Number(lease.rent_amount) <= 0) { setError('Completa todos los campos obligatorios, incluyendo la renta mensual'); return } setError(''); setStep(3) }}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: '#1570EF' }}>
                 Siguiente <ArrowRight className="w-3.5 h-3.5" />
               </button>

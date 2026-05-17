@@ -57,7 +57,8 @@ export default async function InquilinoPortalPage() {
     supabase.from('settings').select('value').eq('key', 'usd_dop_rate').maybeSingle(),
     supabase
       .from('property_events')
-      .select('*')
+      .select('id, title, description, event_date, event_type, created_at')
+      .in('visibility', ['inquilino', 'ambos'])
       .order('created_at', { ascending: false })
       .limit(10),
     supabase
@@ -98,7 +99,7 @@ export default async function InquilinoPortalPage() {
         companyWhatsapp={waSettings?.value as string | undefined}
         contractDocumentUrl={contractDocumentUrl}
         usdRate={usdRateSetting?.value ? Number(usdRateSetting.value) : undefined}
-        recentEvents={(events ?? []) as PropertyEvent[]}
+        recentEvents={(events ?? []) as unknown as PropertyEvent[]}
         adminNotes={(notes ?? []) as Array<{ id: string; content: string; created_at: string }>}
       />
     </div>

@@ -55,8 +55,12 @@ export function RegisterPaymentModal({ payment, onClose }: Props) {
       return
     }
 
-    router.refresh()
-    onClose()
+    try {
+      router.refresh()
+    } finally {
+      setLoading(false)
+      onClose()
+    }
   }
 
   return (
