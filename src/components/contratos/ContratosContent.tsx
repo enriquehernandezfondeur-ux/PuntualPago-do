@@ -67,7 +67,7 @@ export function ContratosContent({ leases }: Props) {
       )}
 
       {/* Filters */}
-      <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1.5 flex-wrap">
+      <div className="flex items-center gap-1 bg-surface border border-border rounded-xl p-1.5 flex-wrap">
         {STATUS_FILTERS.map(f => (
           <button
             key={f.value}

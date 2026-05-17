@@ -30,7 +30,7 @@ export function EdificiosContent({ buildings }: Props) {
           { label: 'Mantenimiento mensual',   value: formatCurrency(totalMaintenanceMonthly), icon: Wrench, color: 'bg-amber-50', iconColor: 'text-amber-600' },
           { label: 'Promedio por edificio',   value: buildings.length > 0 ? formatCurrency(totalMaintenanceMonthly / buildings.length) : '—', icon: DollarSign, color: 'bg-emerald-50', iconColor: 'text-emerald-600' },
         ].map((item, i) => (
-          <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
+          <div key={i} className="bg-surface border border-border rounded-xl p-4 flex items-center gap-3">
             <div className={cn('p-2.5 rounded-xl shrink-0', item.color)}>
               <item.icon className={cn('w-4 h-4', item.iconColor)} />
             </div>
@@ -90,7 +90,7 @@ function BuildingCard({ building: b, expanded, onToggle }: {
   const totalMaintenanceFees = properties.reduce((s, p) => s + (p.maintenance_fee ?? 0), 0)
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+    <div className="bg-surface border border-border rounded-xl overflow-hidden">
       {/* Header */}
       <button
         onClick={onToggle}
@@ -308,7 +308,7 @@ function NewBuildingModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+      <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg">
         <div className="flex items-center justify-between p-5 border-b border-slate-200">
           <div>
             <h2 className="font-bold text-slate-900 text-lg">Nuevo edificio</h2>
@@ -408,7 +408,7 @@ function NewBuildingModal({ onClose }: { onClose: () => void }) {
 
 function EmptyBuildings({ onNew }: { onNew: () => void }) {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-12 flex flex-col items-center gap-4">
+    <div className="bg-surface border border-border rounded-xl p-12 flex flex-col items-center gap-4">
       <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center">
         <Landmark className="w-8 h-8 text-blue-300" />
       </div>

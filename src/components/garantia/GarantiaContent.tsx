@@ -141,12 +141,12 @@ export function GarantiaContent({ guarantees, openClaims, atRiskPayments, totalE
 
       {/* Tab content */}
       {tab === 'garantias' && (
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <div className="bg-surface border border-border rounded-xl overflow-hidden">
           {activeGuarantees.length === 0 ? (
             <EmptyState icon={Shield} title="Sin garantías activas" description="Las propiedades con garantía aparecerán aquí." />
           ) : (
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="border-b border-border">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Propiedad</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Inquilino</th>
@@ -220,7 +220,7 @@ export function GarantiaContent({ guarantees, openClaims, atRiskPayments, totalE
       {tab === 'reclamaciones' && (
         <div className="space-y-4">
           {openClaims.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl">
+            <div className="bg-surface border border-border rounded-xl">
               <EmptyState icon={CheckCircle} title="Sin reclamaciones pendientes" description="Cuando se active una garantía aparecerá aquí." />
             </div>
           ) : (
@@ -326,13 +326,13 @@ export function GarantiaContent({ guarantees, openClaims, atRiskPayments, totalE
           </div>
 
           {atRiskPayments.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl">
+            <div className="bg-surface border border-border rounded-xl">
               <EmptyState icon={CheckCircle} title="Sin alertas tempranas" description="No hay pagos en riesgo de activar la garantía." />
             </div>
           ) : (
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+            <div className="bg-surface border border-border rounded-xl overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="border-b border-border">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Inquilino</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Propiedad</th>

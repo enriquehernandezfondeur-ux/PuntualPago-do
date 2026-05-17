@@ -120,7 +120,7 @@ export function ComunicacionesContent({ communications, stats }: Props) {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Buscar por nombre, propiedad o asunto..."
-              className="w-full pl-8 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-8 pr-8 py-2 bg-surface border border-border rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -342,7 +342,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 function EmptyState({ hasFilter }: { hasFilter: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center h-64 gap-3">
-      <div className="w-14 h-14 bg-white border border-slate-200 rounded-2xl flex items-center justify-center shadow-sm">
+      <div className="w-14 h-14 bg-surface border border-border rounded-2xl flex items-center justify-center shadow-sm">
         <MessageSquare className="w-6 h-6 text-slate-300" />
       </div>
       <p className="font-semibold text-slate-700">

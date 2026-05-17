@@ -116,9 +116,9 @@ export function DocumentosContent({ documents, properties = [], tenants = [], ow
       {filtered.length === 0 ? (
         <EmptyState icon={FolderOpen} title="Sin documentos" description="Sube el primer documento para este registro." />
       ) : (
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <div className="bg-surface border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="border-b border-border">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Documento</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Tipo</th>

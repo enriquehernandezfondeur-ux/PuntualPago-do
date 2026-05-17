@@ -45,7 +45,7 @@ export function PropiedadesContent({ properties }: Props) {
   return (
     <div className="flex-1 p-6 space-y-4">
       {/* Stats bar */}
-      <div className="flex items-center gap-4 bg-white border border-slate-200 rounded-xl p-4">
+      <div className="flex items-center gap-4 bg-surface border border-border rounded-xl p-4">
         {[
           { label: 'Total',              value: properties.length,                                              color: 'text-slate-800' },
           { label: 'Ocupadas',           value: properties.filter(p => p.status === 'ocupada').length,          color: 'text-blue-600' },
@@ -63,7 +63,7 @@ export function PropiedadesContent({ properties }: Props) {
 
       {/* Filters */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1.5">
+        <div className="flex items-center gap-1 bg-surface border border-border rounded-xl p-1.5">
           {STATUS_FILTERS.map(f => (
             <button
               key={f.value}
@@ -86,7 +86,7 @@ export function PropiedadesContent({ properties }: Props) {
           style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
         />
 
-        <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1.5">
+        <div className="flex items-center gap-1 bg-surface border border-border rounded-xl p-1.5">
           <button onClick={() => setView('list')} className={cn('p-1.5 rounded-lg transition', view === 'list' ? 'bg-slate-200' : 'hover:bg-slate-100')}>
             <List className="w-4 h-4 text-slate-600" />
           </button>
@@ -231,7 +231,7 @@ function PropertyCard({ property: p }: { property: Property }) {
   const owner    = (p as any).owner
   const building = (p as any).building
   return (
-    <Link href={`/propiedades/${p.id}`} className="block bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-md hover:border-blue-200 transition-all group">
+    <Link href={`/propiedades/${p.id}`} className="block bg-surface border border-border rounded-xl overflow-hidden hover:shadow-md hover:border-blue-200 transition-all group">
       {/* Image placeholder */}
       <div className="h-36 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative">
         <Building2 className="w-10 h-10 text-slate-300" />
