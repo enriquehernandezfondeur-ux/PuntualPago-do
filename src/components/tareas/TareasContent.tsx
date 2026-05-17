@@ -63,6 +63,7 @@ export function TareasContent({ tasks, teamUsers, currentUserId }: Props) {
       channel: 'nota_interna', direction: 'outbound',
       subject: `Comentario en tarea: ${selected.title}`,
       content: comment, sent_at: new Date().toISOString(), delivered: true,
+      entity_type: 'task', entity_id: selected.id,
     })
     setComment('')
   }

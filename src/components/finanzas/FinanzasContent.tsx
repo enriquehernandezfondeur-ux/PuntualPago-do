@@ -57,7 +57,7 @@ export function FinanzasContent({
       </div>
 
       {/* Cash flow chart */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5">
+      <div className="rounded-2xl p-5" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="font-semibold text-slate-800 text-sm">Flujo de caja — Últimos 6 meses</h3>
@@ -91,7 +91,7 @@ export function FinanzasContent({
 
       {/* Month payments */}
       {tab === 'mes' && (
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <div className="rounded-xl overflow-hidden" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
           {monthPayments.length === 0 ? (
             <EmptyState icon={Wallet} title="Sin pagos este mes" description="No hay registros de cobros para este período." />
           ) : (
@@ -145,7 +145,7 @@ export function FinanzasContent({
       {tab === 'liquidaciones' && (
         <div className="space-y-3">
           {pendingPayouts.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl">
+            <div className="rounded-xl" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
               <EmptyState icon={CheckCircle} title="Sin liquidaciones pendientes" description="Todos los propietarios están al día." />
             </div>
           ) : (
@@ -194,7 +194,7 @@ export function FinanzasContent({
       )}
 
       {tab === 'garantia' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-8">
+        <div className="rounded-xl p-8" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
           <div className="text-center">
             <Shield className="w-12 h-12 text-blue-300 mx-auto mb-4" />
             <h3 className="font-semibold text-slate-800 mb-2">Módulo de exposición de garantía</h3>
@@ -221,7 +221,7 @@ function MorosidadTab({ payments }: { payments: any[] }) {
   }
 
   const totalMora       = payments.reduce((s: number, p: any) => s + p.balance_due, 0)
-  const avgDays         = Math.round(payments.reduce((s: number, p: any) => s + (p.days_overdue ?? 0), 0) / payments.length)
+  const avgDays         = payments.length > 0 ? Math.round(payments.reduce((s: number, p: any) => s + (p.days_overdue ?? 0), 0) / payments.length) : 0
   const byStatus        = payments.reduce((acc: Record<string, number>, p: any) => { acc[p.status] = (acc[p.status] ?? 0) + 1; return acc }, {})
 
   // Group by days overdue

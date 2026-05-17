@@ -420,10 +420,10 @@ function RecoveryModal({ claim, onClose }: { claim: GuaranteeClaim; onClose: () 
       notes: notes || claim.notes,
       updated_at: new Date().toISOString(),
     }).eq('id', claim.id)
-    if (fullyRecovered && g?.id) {
+    if (g?.id) {
       await supabase.from('guarantees').update({
         total_recovered: (g.total_recovered ?? 0) + newRecovery,
-        status: 'recuperada',
+        status: fullyRecovered ? 'recuperada' : g.status,
       }).eq('id', g.id)
     }
     await logAudit({ action: 'guarantee_recovery', entityType: 'guarantee_claims', entityId: claim.id, newValues: { recovery: newRecovery } })
