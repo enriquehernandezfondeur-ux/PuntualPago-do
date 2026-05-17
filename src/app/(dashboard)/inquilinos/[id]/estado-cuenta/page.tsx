@@ -15,10 +15,11 @@ export default async function EstadoCuentaPage({ params }: { params: { id: strin
   const [{ data: tenant }, { data: payments }, { data: lease }, { data: settings }] = await Promise.all([
     supabase.from('tenants').select('*').eq('id', params.id).single(),
     supabase.from('payments')
-      .select('*, property:properties(name, address)')
+      .select('id, period_year, period_month, rent_amount, currency, late_fee, amount_paid, balance_due, status, paid_date, payment_reference, property:properties(name, address)')
       .eq('tenant_id', params.id)
       .order('period_year', { ascending: false })
-      .order('period_month', { ascending: false }),
+      .order('period_month', { ascending: false })
+      .limit(60),
     supabase.from('leases')
       .select('*, property:properties(name, address, city)')
       .eq('tenant_id', params.id).eq('status', 'activo').single(),
@@ -32,7 +33,7 @@ export default async function EstadoCuentaPage({ params }: { params: { id: strin
   return (
     <EstadoCuentaView
       tenant={tenant}
-      payments={payments ?? []}
+      payments={(payments ?? []) as any}
       lease={lease as any}
       companyName={settingsMap.company_name ?? 'PuntualPago'}
       companyPhone={settingsMap.company_phone ?? ''}

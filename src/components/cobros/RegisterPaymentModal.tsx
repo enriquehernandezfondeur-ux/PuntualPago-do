@@ -25,6 +25,7 @@ export function RegisterPaymentModal({ payment, onClose }: Props) {
   const [sendEmail, setSendEmail]     = useState(!!(p.tenant?.email))
   const [loading, setLoading]         = useState(false)
   const [error, setError]             = useState<string | null>(null)
+  const [success, setSuccess]         = useState(false)
   const [showDetails, setShowDetails] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -55,12 +56,9 @@ export function RegisterPaymentModal({ payment, onClose }: Props) {
       return
     }
 
-    try {
-      router.refresh()
-    } finally {
-      setLoading(false)
-      onClose()
-    }
+    setSuccess(true)
+    router.refresh()
+    setTimeout(() => { setLoading(false); onClose() }, 1200)
   }
 
   return (
@@ -107,6 +105,16 @@ export function RegisterPaymentModal({ payment, onClose }: Props) {
             <span style={{ color: '#B42318' }}>{formatCurrency(payment.balance_due, payment.currency)}</span>
           </div>
         </div>
+
+        {success && (
+          <div className="mx-5 mb-0 mt-4 rounded-xl px-4 py-3 flex items-center gap-3" style={{ background: '#ECFDF3', border: '1px solid #A6F4C5' }}>
+            <CheckCircle className="w-5 h-5 shrink-0" style={{ color: '#027A48' }} />
+            <div>
+              <p className="text-sm font-semibold" style={{ color: '#027A48' }}>¡Pago registrado!</p>
+              <p className="text-xs" style={{ color: '#039855' }}>El registro se actualizó correctamente.</p>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
 

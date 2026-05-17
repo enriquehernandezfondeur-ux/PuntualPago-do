@@ -42,6 +42,21 @@ export function PropiedadesContent({ properties }: Props) {
   const totalRent        = filtered.filter(p => p.status === 'ocupada').reduce((s, p) => s + p.rent_amount, 0)
   const totalMaintenance = filtered.filter(p => p.status === 'ocupada').reduce((s, p) => s + (p.maintenance_fee ?? 0), 0)
 
+  if (!properties.length) return (
+    <div className="flex-1 p-6">
+      <EmptyState
+        icon={Building2}
+        title="Sin propiedades"
+        description="Agrega la primera propiedad para empezar a gestionar contratos y cobros."
+        action={
+          <a href="/propiedades/nueva" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: '#1570EF' }}>
+            + Agregar propiedad
+          </a>
+        }
+      />
+    </div>
+  )
+
   return (
     <div className="flex-1 p-6 space-y-4">
       {/* Stats bar */}

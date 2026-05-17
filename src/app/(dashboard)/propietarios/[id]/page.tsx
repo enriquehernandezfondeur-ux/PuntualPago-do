@@ -17,9 +17,9 @@ export default async function OwnerProfilePage({ params }: { params: { id: strin
   ] = await Promise.all([
     supabase.from('owners').select('*').eq('id', params.id).single(),
     supabase.from('properties').select('*, current_lease:leases(id, status, rent_amount, currency, start_date, end_date, tenant:tenants(full_name, status, risk_level, pending_balance))').eq('owner_id', params.id).eq('is_active', true).order('name'),
-    supabase.from('owner_payouts').select('*, property:properties(name)').eq('owner_id', params.id).order('period_year', { ascending: false }).order('period_month', { ascending: false }).limit(24),
-    supabase.from('communications').select('*').eq('owner_id', params.id).order('created_at', { ascending: false }).limit(30),
-    supabase.from('documents').select('*').eq('owner_id', params.id).order('created_at', { ascending: false }),
+    supabase.from('owner_payouts').select('id, period_year, period_month, rent_collected, management_fee, maintenance_deductions, net_payout, currency, paid, paid_date, property:properties(id, name, address)').eq('owner_id', params.id).order('period_year', { ascending: false }).order('period_month', { ascending: false }).limit(48),
+    supabase.from('communications').select('*').eq('owner_id', params.id).order('created_at', { ascending: false }).limit(50),
+    supabase.from('documents').select('*').eq('owner_id', params.id).order('created_at', { ascending: false }).limit(30),
   ])
 
   if (!owner) notFound()

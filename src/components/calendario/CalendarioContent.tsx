@@ -382,8 +382,8 @@ function EventosView({ payments, leases, tasks, viewDate, today }: {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
       {/* Calendar — 2 cols */}
-      <div className="lg:col-span-2 rounded-2xl overflow-hidden" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-
+      <div className="lg:col-span-2 rounded-2xl overflow-hidden overflow-x-auto" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+        <div style={{ minWidth: '480px' }}>
         {/* Day headers */}
         <div className="grid grid-cols-7" style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-subtle)' }}>
           {DAYS.map(d => (
@@ -469,6 +469,7 @@ function EventosView({ payments, leases, tasks, viewDate, today }: {
             </div>
           ))}
         </div>
+        </div>{/* end minWidth wrapper */}
       </div>
 
       {/* Side panel */}

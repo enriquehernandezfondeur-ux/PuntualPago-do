@@ -54,7 +54,7 @@ export function ContratosContent({ leases }: Props) {
   const expiring30 = leases.filter(l => { const d = getDaysUntil(l.end_date); return d >= 0 && d <= 30 && l.status === 'activo' }).length
 
   return (
-    <div className="flex-1 p-6 space-y-4">
+    <div className="flex-1 p-6 space-y-4 overflow-x-auto">
       {/* Alert banners */}
       {expiring30 > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
