@@ -14,9 +14,12 @@ export async function GET(req: NextRequest) {
   }
 
   const q = req.nextUrl.searchParams.get('q')?.trim() ?? ''
-  if (q.length < 2) return NextResponse.json({ results: [] })
+  if (q.length < 3) return NextResponse.json({ results: [] })
 
-  const pattern = `%${q}%`
+  const safeQ = q.replace(/[(),]/g, '').trim()
+  if (safeQ.length < 3) return NextResponse.json({ results: [] })
+
+  const pattern = `%${safeQ}%`
   const orgId = profile.organization_id
 
   // Helper para añadir filtro de org si existe

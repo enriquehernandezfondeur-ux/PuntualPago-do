@@ -10,6 +10,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { resend, FROM_EMAIL, REPLY_TO } from '@/lib/email/resend'
 import { reminderEmailTemplate } from '@/lib/email/templates'
+import { timingSafeEqual } from 'crypto'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 
 // Defaults — sobreescribibles desde la tabla settings
 const DEFAULT_DAYS_BEFORE = [5, 1]
@@ -26,9 +31,9 @@ export async function GET(req: NextRequest) {
   // External schedulers can use x-cron-secret header
   const authHeader   = req.headers.get('authorization') ?? ''
   const cronHeader   = req.headers.get('x-cron-secret') ?? ''
-  const expectedBearer = `Bearer ${process.env.CRON_SECRET}`
-  const validVercel  = process.env.CRON_SECRET && authHeader === expectedBearer
-  const validCustom  = process.env.CRON_SECRET && cronHeader === process.env.CRON_SECRET
+  const secret = process.env.CRON_SECRET ?? ''
+  const validVercel  = secret && safeCompare(authHeader, `Bearer ${secret}`)
+  const validCustom  = secret && safeCompare(cronHeader, secret)
 
   if (!validVercel && !validCustom) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })

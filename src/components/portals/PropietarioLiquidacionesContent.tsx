@@ -208,7 +208,7 @@ export function PropietarioLiquidacionesContent({ payouts, ownerName }: Props) {
           {/* Print-only footer */}
           <div className="hidden print:block mt-6 pt-3 border-t border-slate-200 text-center">
             <p className="text-xs text-slate-400">
-              PuntualPago OS — Gestión de Alquileres · cobros@puntualpago.com
+              PuntualPago OS — Gestión de Alquileres · contacto@puntualpago.do
             </p>
           </div>
         </div>

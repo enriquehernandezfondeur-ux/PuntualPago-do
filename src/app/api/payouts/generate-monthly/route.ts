@@ -11,6 +11,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { timingSafeEqual } from 'crypto'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 
 async function generatePayouts(year: number, month: number) {
   const supabase = await createClient()
@@ -121,6 +126,13 @@ async function generatePayouts(year: number, month: number) {
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+    if (!['super_admin', 'admin', 'gerente_operativo', 'contabilidad'].includes(profile?.role ?? '')) {
+      return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
+    }
     const { year, month } = await req.json()
     if (!year || !month) return NextResponse.json({ error: 'year y month requeridos' }, { status: 400 })
     const result = await generatePayouts(Number(year), Number(month))
@@ -140,8 +152,8 @@ export async function GET(req: NextRequest) {
 
     const authHeader  = req.headers.get('authorization') ?? ''
     const cronHeader  = req.headers.get('x-cron-secret') ?? ''
-    const validVercel = authHeader === `Bearer ${process.env.CRON_SECRET}`
-    const validCustom = cronHeader === process.env.CRON_SECRET
+    const validVercel = safeCompare(authHeader, `Bearer ${process.env.CRON_SECRET}`)
+    const validCustom = safeCompare(cronHeader, process.env.CRON_SECRET!)
 
     if (!validVercel && !validCustom) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })

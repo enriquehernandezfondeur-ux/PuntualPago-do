@@ -8,8 +8,8 @@ if (!key || key.startsWith('re_xxxx')) {
 
 export const resend = new Resend(key)
 
-export const FROM_EMAIL = 'PuntualPago <notificaciones@puntualpago.com>'
-export const REPLY_TO   = 'cobros@puntualpago.com'
+export const FROM_EMAIL = 'PuntualPago <contacto@puntualpago.do>'
+export const REPLY_TO   = 'contacto@puntualpago.do'
 
 /** Devuelve true si Resend está configurado y puede enviar emails */
 export const isEmailConfigured = !!key && !key.startsWith('re_xxxx')

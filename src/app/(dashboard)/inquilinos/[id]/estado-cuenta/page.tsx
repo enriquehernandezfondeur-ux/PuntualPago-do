@@ -35,7 +35,7 @@ export default async function EstadoCuentaPage({ params }: { params: { id: strin
       lease={lease as any}
       companyName={settingsMap.company_name ?? 'PuntualPago'}
       companyPhone={settingsMap.company_phone ?? ''}
-      companyEmail={settingsMap.cobros_email ?? 'cobros@puntualpago.com'}
+      companyEmail={settingsMap.cobros_email ?? 'contacto@puntualpago.do'}
     />
   )
 }

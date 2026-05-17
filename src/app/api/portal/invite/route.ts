@@ -33,13 +33,16 @@ export async function POST(req: NextRequest) {
 
   const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey)
 
-  // Check if auth user exists
-  const { data: existingUsers } = await admin.auth.admin.listUsers()
-  const existingUser = existingUsers?.users?.find(u => u.email === email)
+  // Check if user exists in the users table (avoids loading all auth users into memory)
+  const { data: existingUser } = await supabase
+    .from('users')
+    .select('id')
+    .eq('email', email)
+    .maybeSingle()
 
   let authUserId: string
 
-  if (existingUser) {
+  if (existingUser?.id) {
     authUserId = existingUser.id
   } else {
     // Create new auth user (invite)

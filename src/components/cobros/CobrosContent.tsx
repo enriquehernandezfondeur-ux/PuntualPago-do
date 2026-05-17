@@ -317,7 +317,7 @@ export function CobrosContent({ payments, cobrosUsers }: Props) {
         )}
 
         {/* Table */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="flex-1 overflow-y-auto scrollbar-thin overflow-x-auto">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 gap-3">
               <div
@@ -330,6 +330,49 @@ export function CobrosContent({ payments, cobrosUsers }: Props) {
               <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Ajusta los filtros para ver otros registros</p>
             </div>
           ) : (
+            <>
+            {/* Mobile cards — solo visible en < md */}
+            <div className="md:hidden divide-y" style={{ borderColor: 'var(--border-subtle)' }}>
+              {filtered.map(p => {
+                const tenant = (p as any).tenant
+                const prop   = (p as any).property
+                const isOverdue = ['vencido','en_mora','en_legal'].includes(p.status)
+                return (
+                  <div
+                    key={p.id}
+                    onClick={() => setSelectedPayment(selectedPayment?.id === p.id ? null : p)}
+                    className="px-4 py-3 cursor-pointer active:bg-slate-50"
+                    style={{ background: selectedPayment?.id === p.id ? '#EFF8FF' : '' }}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center font-bold shrink-0 text-xs"
+                          style={{ background: isOverdue ? '#FEF3F2' : '#EFF8FF', color: isOverdue ? '#B42318' : '#175CD3' }}
+                        >
+                          {tenant?.full_name?.split(' ').map((n: string) => n[0]).slice(0, 2).join('') ?? '?'}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm truncate" style={{ color: 'var(--text)' }}>{tenant?.full_name ?? '—'}</p>
+                          <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)' }}>{prop?.name ?? '—'}</p>
+                        </div>
+                      </div>
+                      <PaymentStatusBadge status={p.status} size="xs" />
+                    </div>
+                    <div className="flex items-center justify-between text-xs mt-1">
+                      <span style={{ color: 'var(--text-tertiary)' }}>
+                        {new Date(p.period_year, p.period_month - 1).toLocaleDateString('es-DO', { month: 'short', year: 'numeric' })}
+                      </span>
+                      <span className="font-semibold" style={{ color: p.balance_due > 0 ? '#B42318' : '#027A48' }}>
+                        {p.balance_due > 0 ? formatCurrency(p.balance_due, p.currency) : 'Pagado'}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="hidden md:block">
             <table className="w-full text-sm">
               <thead>
                 <tr
@@ -501,6 +544,8 @@ export function CobrosContent({ payments, cobrosUsers }: Props) {
                 })}
               </tbody>
             </table>
+            </div>
+            </>
           )}
         </div>
       </div>

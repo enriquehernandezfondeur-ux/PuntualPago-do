@@ -63,7 +63,7 @@ function baseLayout(content: string, preheader = '') {
             <td style="background-color:${BRAND_LIGHT};border-radius:0 0 12px 12px;padding:20px 32px;border-top:1px solid #e2e8f0;">
               <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;line-height:1.6;">
                 Este mensaje fue enviado por PuntualPago OS, la plataforma de gestión de alquileres.<br/>
-                Si tiene alguna pregunta, contáctenos en <a href="mailto:cobros@puntualpago.com" style="color:${BRAND_BLUE};text-decoration:none;">cobros@puntualpago.com</a>
+                Si tiene alguna pregunta, contáctenos en <a href="mailto:contacto@puntualpago.do" style="color:${BRAND_BLUE};text-decoration:none;">contacto@puntualpago.do</a>
               </p>
             </td>
           </tr>

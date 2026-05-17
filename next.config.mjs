@@ -28,13 +28,18 @@ const securityHeaders = [
 
 const nextConfig = {
   eslint: {
-    // ESLint se corre por separado (npm run lint) — no bloquea el build
     ignoreDuringBuilds: true,
   },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.supabase.co' },
     ],
+  },
+  async rewrites() {
+    return [
+      // Browsers request /favicon.ico directly — serve the dynamic icon
+      { source: '/favicon.ico', destination: '/icon' },
+    ]
   },
   async headers() {
     return [{ source: '/(.*)', headers: securityHeaders }]

@@ -1,0 +1,14 @@
+{
+  "name": "PuntualPago",
+  "short_name": "PuntualPago",
+  "description": "Alquiler garantizado en República Dominicana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0B3C5D",
+  "lang": "es-DO",
+  "icons": [
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

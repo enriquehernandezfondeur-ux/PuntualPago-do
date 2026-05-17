@@ -2,13 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { resend, FROM_EMAIL, REPLY_TO } from '@/lib/email/resend'
 import { paymentConfirmTemplate } from '@/lib/email/templates'
+import { timingSafeEqual } from 'crypto'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient()
 
     const { data: { user } } = await supabase.auth.getUser()
-    const isCron = req.headers.get('x-cron-secret') === process.env.CRON_SECRET
+    const isCron = !!process.env.CRON_SECRET && safeCompare(req.headers.get('x-cron-secret') ?? '', process.env.CRON_SECRET)
     if (!user && !isCron) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }

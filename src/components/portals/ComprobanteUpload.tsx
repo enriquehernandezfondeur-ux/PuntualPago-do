@@ -39,10 +39,18 @@ export function ComprobanteUpload({ tenantId, tenantName, leaseId, propertyId, p
 
   const maxSize = 8 * 1024 * 1024 // 8 MB
 
+  const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp']
+  const ALLOWED_EXTS  = ['pdf', 'jpg', 'jpeg', 'png', 'webp']
+
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0] ?? null
     if (f && f.size > maxSize) {
       setErrorMsg('El archivo no puede superar 8 MB')
+      setFile(null)
+      return
+    }
+    if (f && !ALLOWED_TYPES.includes(f.type)) {
+      setErrorMsg('Solo se permiten archivos PDF, JPG, PNG o WEBP')
       setFile(null)
       return
     }
@@ -54,13 +62,15 @@ export function ComprobanteUpload({ tenantId, tenantName, leaseId, propertyId, p
     e.preventDefault()
     if (!file) { setErrorMsg('Selecciona un archivo'); return }
     if (!selectedPaymentId) { setErrorMsg('Selecciona el pago correspondiente'); return }
+    if (!ALLOWED_TYPES.includes(file.type)) { setErrorMsg('Tipo de archivo no permitido'); return }
 
     setState('uploading')
     setErrorMsg('')
 
     try {
       // Upload to Supabase Storage bucket "comprobantes"
-      const ext      = file.name.split('.').pop()
+      const rawExt = file.name.split('.').pop()?.toLowerCase() ?? ''
+      const ext    = ALLOWED_EXTS.includes(rawExt) ? rawExt : 'pdf'
       const filename = `${tenantId}/${Date.now()}.${ext}`
       const { error: uploadError } = await supabase.storage
         .from('comprobantes')

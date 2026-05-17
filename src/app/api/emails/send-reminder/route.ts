@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { resend, FROM_EMAIL, REPLY_TO } from '@/lib/email/resend'
 import { reminderEmailTemplate } from '@/lib/email/templates'
+import { timingSafeEqual } from 'crypto'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
     const allowed = ['super_admin', 'admin', 'gerente_operativo', 'equipo_cobros']
-    const isCron = req.headers.get('x-cron-secret') === process.env.CRON_SECRET
+    const isCron = !!process.env.CRON_SECRET && safeCompare(req.headers.get('x-cron-secret') ?? '', process.env.CRON_SECRET)
     if (!isCron && (!profile || !allowed.includes(profile.role))) {
       return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
     }

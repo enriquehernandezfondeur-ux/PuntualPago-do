@@ -32,11 +32,11 @@ function buildReminderMessage({
   })
 
   if (daysUntilDue > 0) {
-    return `Hola ${tenantName.split(' ')[0]} 👋\n\nTe recordamos que tu pago de renta está próximo a vencer:\n\n🏠 *${propertyName}*\n💰 *${amount}*\n📅 Vence: ${dateStr} (en ${daysUntilDue} día${daysUntilDue !== 1 ? 's' : ''})\n${paymentNumber ? `🔖 Ref: ${paymentNumber}\n` : ''}\nRecuerda pagar antes del día 5 del mes para evitar cargos por mora.\n\nSi ya realizaste el pago, puedes subir tu comprobante en: *puntualpago.com/portal/inquilino/comprobante*\n\n¡Gracias! 🙏`
+    return `Hola ${tenantName.split(' ')[0]} 👋\n\nTe recordamos que tu pago de renta está próximo a vencer:\n\n🏠 *${propertyName}*\n💰 *${amount}*\n📅 Vence: ${dateStr} (en ${daysUntilDue} día${daysUntilDue !== 1 ? 's' : ''})\n${paymentNumber ? `🔖 Ref: ${paymentNumber}\n` : ''}\nRecuerda pagar antes del día 5 del mes para evitar cargos por mora.\n\nSi ya realizaste el pago, puedes subir tu comprobante en: *puntualpago.do/portal/inquilino/comprobante*\n\n¡Gracias! 🙏`
   }
 
   const daysOverdue = Math.abs(daysUntilDue)
-  return `Hola ${tenantName.split(' ')[0]} 👋\n\nTu pago de renta está *vencido*:\n\n🏠 *${propertyName}*\n💰 *${amount}*\n📅 Venció: ${dateStr} (hace ${daysOverdue} día${daysOverdue !== 1 ? 's' : ''})\n${paymentNumber ? `🔖 Ref: ${paymentNumber}\n` : ''}\n⚠️ Por favor regulariza tu situación a la brevedad posible para evitar cargos adicionales.\n\n¿Ya pagaste? Sube tu comprobante en: *puntualpago.com/portal/inquilino/comprobante*\n\nContacta con nosotros si tienes alguna duda. 📞`
+  return `Hola ${tenantName.split(' ')[0]} 👋\n\nTu pago de renta está *vencido*:\n\n🏠 *${propertyName}*\n💰 *${amount}*\n📅 Venció: ${dateStr} (hace ${daysOverdue} día${daysOverdue !== 1 ? 's' : ''})\n${paymentNumber ? `🔖 Ref: ${paymentNumber}\n` : ''}\n⚠️ Por favor regulariza tu situación a la brevedad posible para evitar cargos adicionales.\n\n¿Ya pagaste? Sube tu comprobante en: *puntualpago.do/portal/inquilino/comprobante*\n\nContacta con nosotros si tienes alguna duda. 📞`
 }
 
 export async function POST(req: NextRequest) {

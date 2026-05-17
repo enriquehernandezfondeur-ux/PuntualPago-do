@@ -11,7 +11,7 @@ interface Props {
   onClose: () => void
 }
 
-const PAYMENT_METHODS = ['Transferencia bancaria', 'Efectivo', 'Cheque', 'Azul', 'PayPal', 'Zelle', 'Otro']
+const PAYMENT_METHODS = ['Transferencia bancaria', 'Efectivo', 'Cheque', 'Otro']
 
 export function RegisterPaymentModal({ payment, onClose }: Props) {
   const p = payment as any

@@ -25,7 +25,7 @@ export default async function ReciboPage({ params }: { params: { id: string } })
       payment={payment as any}
       companyName={settingsMap.company_name ?? 'PuntualPago'}
       companyPhone={settingsMap.company_phone ?? ''}
-      companyEmail={settingsMap.cobros_email ?? 'cobros@puntualpago.com'}
+      companyEmail={settingsMap.cobros_email ?? 'contacto@puntualpago.do'}
       companyAddress={settingsMap.company_address ?? ''}
     />
   )

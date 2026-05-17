@@ -33,11 +33,11 @@ function buildMessage(tenantName: string, propertyName: string, amount: string, 
   const firstName = tenantName.split(' ')[0]
 
   if (daysUntilDue > 0) {
-    return `Hola ${firstName} 👋\n\nRecordatorio de pago:\n🏠 *${propertyName}*\n💰 *${amount}*\n📅 Vence: ${dateStr} (${daysUntilDue}d)\n\nSube tu comprobante en puntualpago.com/portal\n\n¿Dudas? Escríbenos al ${companyWhatsapp}`
+    return `Hola ${firstName} 👋\n\nRecordatorio de pago:\n🏠 *${propertyName}*\n💰 *${amount}*\n📅 Vence: ${dateStr} (${daysUntilDue}d)\n\nSube tu comprobante en puntualpago.do/portal\n\n¿Dudas? Escríbenos al ${companyWhatsapp}`
   }
 
   const d = Math.abs(daysUntilDue)
-  return `Hola ${firstName} 👋\n\nTu pago está *vencido hace ${d} día${d !== 1 ? 's' : ''}*:\n🏠 *${propertyName}*\n💰 *${amount}*\n\nPor favor regulariza para evitar cargos adicionales.\nSube tu comprobante: puntualpago.com/portal\n\n📞 ${companyWhatsapp}`
+  return `Hola ${firstName} 👋\n\nTu pago está *vencido hace ${d} día${d !== 1 ? 's' : ''}*:\n🏠 *${propertyName}*\n💰 *${amount}*\n\nPor favor regulariza para evitar cargos adicionales.\nSube tu comprobante: puntualpago.do/portal\n\n📞 ${companyWhatsapp}`
 }
 
 export async function GET(req: NextRequest) {

@@ -27,12 +27,12 @@ export function ConfiguracionContent({ settings: initialSettings, users }: Props
   const [empresa, setEmpresa] = useState({
     company_name:    getSetting('company_name', 'PuntualPago'),
     company_phone:   getSetting('company_phone', ''),
-    company_email:   getSetting('company_email', 'cobros@puntualpago.com'),
+    company_email:   getSetting('company_email', 'contacto@puntualpago.do'),
     company_whatsapp:getSetting('company_whatsapp', ''),
     company_address: getSetting('company_address', ''),
     company_city:    getSetting('company_city', 'Santo Domingo'),
     site_url:        getSetting('site_url', ''),
-    cobros_email:    getSetting('cobros_email', 'cobros@puntualpago.com'),
+    cobros_email:    getSetting('cobros_email', 'contacto@puntualpago.do'),
   })
 
   const [cobros, setCobros] = useState({
@@ -100,12 +100,12 @@ export function ConfiguracionContent({ settings: initialSettings, users }: Props
             <div className="grid grid-cols-2 gap-4">
               <Field label="Teléfono">{inp(empresa, setEmpresa, 'company_phone', 'tel', '809-000-0000')}</Field>
               <Field label="WhatsApp" hint="Número que aparece en los recordatorios">{inp(empresa, setEmpresa, 'company_whatsapp', 'tel', '809-000-0000')}</Field>
-              <Field label="Email de cobros">{inp(empresa, setEmpresa, 'cobros_email', 'email', 'cobros@puntualpago.com')}</Field>
-              <Field label="Email general">{inp(empresa, setEmpresa, 'company_email', 'email', 'info@puntualpago.com')}</Field>
+              <Field label="Email de cobros">{inp(empresa, setEmpresa, 'cobros_email', 'email', 'contacto@puntualpago.do')}</Field>
+              <Field label="Email general">{inp(empresa, setEmpresa, 'company_email', 'email', 'contacto@puntualpago.do')}</Field>
             </div>
             <Field label="Dirección">{inp(empresa, setEmpresa, 'company_address', 'text', 'Av. Winston Churchill...')}</Field>
             <Field label="Ciudad">{inp(empresa, setEmpresa, 'company_city', 'text', 'Santo Domingo')}</Field>
-            <Field label="URL del sitio" hint="Para links en emails (ej. https://puntualpago.com)">{inp(empresa, setEmpresa, 'site_url', 'url', 'https://puntualpago.com')}</Field>
+            <Field label="URL del sitio" hint="Para links en emails (ej. https://puntualpago.do)">{inp(empresa, setEmpresa, 'site_url', 'url', 'https://puntualpago.do')}</Field>
           </div>
           <SaveBtn saving={saving} saved={saved} onClick={() => saveSettings(empresa)} />
         </div>

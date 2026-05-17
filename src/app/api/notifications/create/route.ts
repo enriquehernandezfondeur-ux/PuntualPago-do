@@ -5,6 +5,11 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { timingSafeEqual } from 'crypto'
+
+function safeCompare(a: string, b: string): boolean {
+  try { const ba = Buffer.from(a), bb = Buffer.from(b); return ba.length === bb.length && timingSafeEqual(ba, bb) } catch { return false }
+}
 
 const ALLOWED_CALLER_ROLES = ['super_admin','admin','gerente_operativo','equipo_cobros','equipo_legal']
 
@@ -23,7 +28,7 @@ export async function POST(req: NextRequest) {
     cronSecret &&
     cronSecret !== 'change-me-to-a-strong-random-secret' &&
     cronSecret.length >= 16 &&
-    req.headers.get('x-cron-secret') === cronSecret
+    safeCompare(req.headers.get('x-cron-secret') ?? '', cronSecret)
   )
 
   if (!isCron && (!profile || !ALLOWED_CALLER_ROLES.includes(profile.role))) {
