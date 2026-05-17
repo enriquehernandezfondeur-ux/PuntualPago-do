@@ -98,48 +98,88 @@ export function FinanzasContent({
           {monthPayments.length === 0 ? (
             <EmptyState icon={Wallet} title="Sin pagos este mes" description="No hay registros de cobros para este período." />
           ) : (
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Inquilino / Propiedad</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Propietario</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Renta</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Cobrado</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Saldo</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide">Estado</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Pagado</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
+            <>
+              {/* Mobile cards */}
+              <div className="md:hidden divide-y" style={{ borderColor: 'var(--border-subtle)' }}>
                 {monthPayments.map((p: any) => (
-                  <tr key={p.id} className="hover:bg-slate-50 transition">
-                    <td className="px-4 py-3.5">
-                      <p className="font-medium text-slate-800">{p.tenant?.full_name}</p>
-                      <p className="text-slate-500 text-xs">{p.property?.name}</p>
-                    </td>
-                    <td className="px-4 py-3.5 text-slate-600">{p.owner?.full_name}</td>
-                    <td className="px-4 py-3.5 text-right font-medium text-slate-800">{formatCurrency(p.rent_amount, p.currency)}</td>
-                    <td className="px-4 py-3.5 text-right text-emerald-600 font-medium">{formatCurrency(p.amount_paid, p.currency)}</td>
-                    <td className="px-4 py-3.5 text-right">
-                      {p.balance_due > 0
-                        ? <span className="text-red-700 font-bold">{formatCurrency(p.balance_due, p.currency)}</span>
-                        : <span className="text-emerald-600">—</span>
-                      }
-                    </td>
-                    <td className="px-4 py-3.5 text-center"><PaymentStatusBadge status={p.status} /></td>
-                    <td className="px-4 py-3.5 text-slate-500 text-sm">{p.paid_date ? formatDate(p.paid_date) : '—'}</td>
-                  </tr>
+                  <div key={p.id} className="px-4 py-3.5 space-y-1.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-medium text-sm" style={{ color: 'var(--text)' }}>{p.tenant?.full_name}</p>
+                        <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{p.property?.name}</p>
+                      </div>
+                      <PaymentStatusBadge status={p.status} />
+                    </div>
+                    <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-secondary)' }}>
+                      <span>Renta: <span className="font-medium" style={{ color: 'var(--text)' }}>{formatCurrency(p.rent_amount, p.currency)}</span></span>
+                      <span>Cobrado: <span className="font-medium text-emerald-600">{formatCurrency(p.amount_paid, p.currency)}</span></span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span style={{ color: 'var(--text-secondary)' }}>Saldo:{' '}
+                        {p.balance_due > 0
+                          ? <span className="font-bold text-red-700">{formatCurrency(p.balance_due, p.currency)}</span>
+                          : <span className="text-emerald-600">—</span>
+                        }
+                      </span>
+                      {p.paid_date && <span style={{ color: 'var(--text-tertiary)' }}>{formatDate(p.paid_date)}</span>}
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-              <tfoot className="bg-slate-50 border-t border-slate-200">
-                <tr>
-                  <td colSpan={3} className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Totales del mes</td>
-                  <td className="px-4 py-3 text-right font-bold text-emerald-700">{formatCurrency(totalCollected)}</td>
-                  <td className="px-4 py-3 text-right font-bold text-red-700">{formatCurrency(totalPending)}</td>
-                  <td colSpan={2} />
-                </tr>
-              </tfoot>
-            </table>
+                <div className="px-4 py-3 bg-slate-50 flex items-center justify-between text-xs font-semibold text-slate-500 uppercase">
+                  <span>Totales</span>
+                  <span>
+                    <span className="text-emerald-700 mr-3">{formatCurrency(totalCollected)}</span>
+                    {totalPending > 0 && <span className="text-red-700">{formatCurrency(totalPending)}</span>}
+                  </span>
+                </div>
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Inquilino / Propiedad</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Propietario</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Renta</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Cobrado</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Saldo</th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wide">Estado</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Pagado</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {monthPayments.map((p: any) => (
+                      <tr key={p.id} className="hover:bg-slate-50 transition">
+                        <td className="px-4 py-3.5">
+                          <p className="font-medium text-slate-800">{p.tenant?.full_name}</p>
+                          <p className="text-slate-500 text-xs">{p.property?.name}</p>
+                        </td>
+                        <td className="px-4 py-3.5 text-slate-600">{p.owner?.full_name}</td>
+                        <td className="px-4 py-3.5 text-right font-medium text-slate-800">{formatCurrency(p.rent_amount, p.currency)}</td>
+                        <td className="px-4 py-3.5 text-right text-emerald-600 font-medium">{formatCurrency(p.amount_paid, p.currency)}</td>
+                        <td className="px-4 py-3.5 text-right">
+                          {p.balance_due > 0
+                            ? <span className="text-red-700 font-bold">{formatCurrency(p.balance_due, p.currency)}</span>
+                            : <span className="text-emerald-600">—</span>
+                          }
+                        </td>
+                        <td className="px-4 py-3.5 text-center"><PaymentStatusBadge status={p.status} /></td>
+                        <td className="px-4 py-3.5 text-slate-500 text-sm">{p.paid_date ? formatDate(p.paid_date) : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="bg-slate-50 border-t border-slate-200">
+                    <tr>
+                      <td colSpan={3} className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Totales del mes</td>
+                      <td className="px-4 py-3 text-right font-bold text-emerald-700">{formatCurrency(totalCollected)}</td>
+                      <td className="px-4 py-3 text-right font-bold text-red-700">{formatCurrency(totalPending)}</td>
+                      <td colSpan={2} />
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </>
           )}
         </div>
       )}

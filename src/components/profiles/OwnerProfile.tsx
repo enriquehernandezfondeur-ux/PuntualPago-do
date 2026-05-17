@@ -286,47 +286,88 @@ function LiquidacionesTab({ payouts, ownerId, ownerName }: {
         </div>
       )}
 
-      <table className="w-full text-sm">
-        <thead>
-          <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-subtle)' }}>
-            {['Período', 'Propiedad', 'Renta cobrada', 'Comisión', 'Neto a pagar', 'Estado', 'Acción'].map(h => (
-              <th key={h} className="px-4 py-2.5 text-left font-medium" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)' }}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {payouts.map((p, i) => {
-            const isPaid = p.paid || localPaid.has(p.id)
-            return (
-              <tr key={p.id} style={{ borderBottom: i < payouts.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: !isPaid ? '#FFFDF5' : '' }}>
-                <td className="px-4 py-3 text-xs font-medium capitalize" style={{ color: 'var(--text)' }}>{formatMonth(p.period_year, p.period_month)}</td>
-                <td className="px-4 py-3 text-xs" style={{ color: 'var(--text-secondary)' }}>{(p as any).property?.name ?? '—'}</td>
-                <td className="px-4 py-3 text-xs" style={{ color: 'var(--text)' }}>{formatCurrency(p.rent_collected, p.currency)}</td>
-                <td className="px-4 py-3 text-xs" style={{ color: '#B42318' }}>−{formatCurrency(p.management_fee, p.currency)}</td>
-                <td className="px-4 py-3 text-sm font-bold" style={{ color: isPaid ? 'var(--success)' : 'var(--text)' }}>
-                  {formatCurrency(p.net_payout, p.currency)}
-                </td>
-                <td className="px-4 py-3">
+      {/* Mobile cards — visible only on small screens */}
+      <div className="md:hidden divide-y" style={{ borderColor: 'var(--border-subtle)' }}>
+        {payouts.map(p => {
+          const isPaid = p.paid || localPaid.has(p.id)
+          return (
+            <div key={p.id} className="px-4 py-4 space-y-2" style={{ background: !isPaid ? '#FFFDF5' : '' }}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-sm truncate" style={{ color: 'var(--text)' }}>
+                    {p.property?.name ?? '—'}
+                  </p>
+                  <p className="text-xs capitalize mt-0.5" style={{ color: 'var(--text-tertiary)' }}>
+                    {formatMonth(p.period_year, p.period_month)}
+                  </p>
+                </div>
+                <div className="shrink-0">
                   {isPaid
-                    ? <span className="text-xs flex items-center gap-1 font-medium" style={{ color: '#027A48' }}><CheckCircle2 className="w-3 h-3" /> Pagado {p.paid_date ? formatDate(p.paid_date) : ''}</span>
-                    : <span className="text-xs flex items-center gap-1 font-medium" style={{ color: '#B54708' }}><Clock className="w-3 h-3" /> Pendiente</span>
+                    ? <span className="text-xs flex items-center gap-1 font-medium px-2 py-0.5 rounded-full" style={{ background: 'var(--success-bg)', color: '#027A48', border: '1px solid var(--success-border)' }}><CheckCircle2 className="w-3 h-3" /> Pagado</span>
+                    : <span className="text-xs flex items-center gap-1 font-medium px-2 py-0.5 rounded-full" style={{ background: 'var(--warning-bg)', color: '#B54708', border: '1px solid var(--warning-border)' }}><Clock className="w-3 h-3" /> Pendiente</span>
                   }
-                </td>
-                <td className="px-4 py-3">
-                  {!isPaid && (
-                    <button
-                      onClick={() => setMarkTarget(p)}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white transition bg-emerald-500 hover:bg-emerald-600"
-                    >
-                      Marcar pagado
-                    </button>
-                  )}
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+                </div>
+              </div>
+              <p className="text-xl font-bold" style={{ color: isPaid ? 'var(--success)' : 'var(--text)' }}>
+                {formatCurrency(p.net_payout, p.currency)}
+              </p>
+              {!isPaid && !localPaid.has(p.id) && (
+                <button
+                  onClick={() => setMarkTarget(p)}
+                  className="w-full py-2 rounded-lg text-xs font-semibold text-white transition bg-emerald-500 hover:bg-emerald-600"
+                >
+                  Marcar pagado
+                </button>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Desktop table — hidden on mobile, overflow-x-auto as tablet fallback */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-subtle)' }}>
+              {['Período', 'Propiedad', 'Renta cobrada', 'Comisión', 'Neto a pagar', 'Estado', 'Acción'].map(h => (
+                <th key={h} className="px-4 py-2.5 text-left font-medium" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)' }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {payouts.map((p, i) => {
+              const isPaid = p.paid || localPaid.has(p.id)
+              return (
+                <tr key={p.id} style={{ borderBottom: i < payouts.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: !isPaid ? '#FFFDF5' : '' }}>
+                  <td className="px-4 py-3 text-xs font-medium capitalize" style={{ color: 'var(--text)' }}>{formatMonth(p.period_year, p.period_month)}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: 'var(--text-secondary)' }}>{(p as any).property?.name ?? '—'}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: 'var(--text)' }}>{formatCurrency(p.rent_collected, p.currency)}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: '#B42318' }}>−{formatCurrency(p.management_fee, p.currency)}</td>
+                  <td className="px-4 py-3 text-sm font-bold" style={{ color: isPaid ? 'var(--success)' : 'var(--text)' }}>
+                    {formatCurrency(p.net_payout, p.currency)}
+                  </td>
+                  <td className="px-4 py-3">
+                    {isPaid
+                      ? <span className="text-xs flex items-center gap-1 font-medium" style={{ color: '#027A48' }}><CheckCircle2 className="w-3 h-3" /> Pagado {p.paid_date ? formatDate(p.paid_date) : ''}</span>
+                      : <span className="text-xs flex items-center gap-1 font-medium" style={{ color: '#B54708' }}><Clock className="w-3 h-3" /> Pendiente</span>
+                    }
+                  </td>
+                  <td className="px-4 py-3">
+                    {!isPaid && (
+                      <button
+                        onClick={() => setMarkTarget(p)}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white transition bg-emerald-500 hover:bg-emerald-600"
+                      >
+                        Marcar pagado
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
 
       {/* Confirm modal */}
       {markTarget && (
