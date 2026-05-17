@@ -1,19 +1,23 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils/cn'
 import { formatCurrency } from '@/lib/utils/format'
+import { createClient } from '@/lib/supabase/client'
 import type { Building, Property } from '@/types/database'
 import {
   Landmark, Building2, Users, Wrench, DollarSign,
   ChevronDown, ChevronUp, MapPin, X, Plus,
-  CheckCircle2, AlertCircle, Calculator,
+  CheckCircle2, AlertCircle, Calculator, Pencil, Trash2,
 } from 'lucide-react'
 
 interface Props { buildings: Building[] }
 
 export function EdificiosContent({ buildings }: Props) {
+  const router = useRouter()
   const [expandedId, setExpandedId] = useState<string | null>(buildings[0]?.id ?? null)
   const [showNewModal, setShowNewModal] = useState(false)
+  const [editBuilding, setEditBuilding] = useState<Building | null>(null)
 
   const totalMaintenanceMonthly = buildings.reduce((s, b) => s + b.monthly_maintenance_amount, 0)
   const totalOccupied = buildings.reduce((s, b) => s + (b.occupied_units ?? 0), 0)
@@ -65,21 +69,35 @@ export function EdificiosContent({ buildings }: Props) {
               building={b}
               expanded={expandedId === b.id}
               onToggle={() => setExpandedId(expandedId === b.id ? null : b.id)}
+              onEdit={setEditBuilding}
+              onDelete={async (bld) => {
+                if (!confirm(`¿Desactivar el edificio "${bld.name}"? Las propiedades asociadas no se eliminarán.`)) return
+                const supabase = createClient()
+                await supabase.from('buildings').update({ is_active: false }).eq('id', bld.id)
+                router.refresh()
+              }}
             />
           ))}
         </div>
       )}
 
       {/* New building modal */}
-      {showNewModal && <NewBuildingModal onClose={() => setShowNewModal(false)} />}
+      {(showNewModal || editBuilding) && (
+        <NewBuildingModal
+          onClose={() => { setShowNewModal(false); setEditBuilding(null) }}
+          editData={editBuilding ?? undefined}
+          onSaved={() => { setShowNewModal(false); setEditBuilding(null); router.refresh() }}
+        />
+      )}
     </div>
   )
 }
 
 // ─── Building Card ────────────────────────────────────────────────────────────
 
-function BuildingCard({ building: b, expanded, onToggle }: {
+function BuildingCard({ building: b, expanded, onToggle, onEdit, onDelete }: {
   building: Building; expanded: boolean; onToggle: () => void
+  onEdit: (b: Building) => void; onDelete: (b: Building) => void
 }) {
   const properties = (b.properties ?? []) as unknown as (Property & { owner?: { id: string; full_name: string } })[]
   const occupied = properties.filter(p => p.status === 'ocupada').length
@@ -134,9 +152,19 @@ function BuildingCard({ building: b, expanded, onToggle }: {
           </p>
         </div>
 
-        {/* Expand chevron */}
-        <div className="shrink-0 text-slate-400">
-          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        {/* Actions + chevron */}
+        <div className="shrink-0 flex items-center gap-1">
+          <button onClick={e => { e.stopPropagation(); onEdit(b) }}
+            className="p-1.5 rounded-lg hover:bg-slate-100 transition" aria-label="Editar edificio">
+            <Pencil className="w-3.5 h-3.5 text-slate-400 hover:text-blue-600" />
+          </button>
+          <button onClick={e => { e.stopPropagation(); onDelete(b) }}
+            className="p-1.5 rounded-lg hover:bg-red-50 transition" aria-label="Desactivar edificio">
+            <Trash2 className="w-3.5 h-3.5 text-slate-400 hover:text-red-500" />
+          </button>
+          <div className="text-slate-400 ml-1">
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </div>
         </div>
       </button>
 
@@ -269,15 +297,19 @@ function StatusDot({ status }: { status: string }) {
 
 // ─── New Building Modal ───────────────────────────────────────────────────────
 
-function NewBuildingModal({ onClose }: { onClose: () => void }) {
-  const [name, setName]         = useState('')
-  const [code, setCode]         = useState('')
-  const [address, setAddress]   = useState('')
-  const [sector, setSector]     = useState('')
-  const [city, setCity]         = useState('Santo Domingo')
-  const [units, setUnits]       = useState('1')
-  const [amount, setAmount]     = useState('')
-  const [notes, setNotes]       = useState('')
+function NewBuildingModal({ onClose, editData, onSaved }: {
+  onClose: () => void; editData?: Building; onSaved: () => void
+}) {
+  const supabase = createClient()
+  const isEdit = !!editData
+  const [name, setName]         = useState(editData?.name ?? '')
+  const [code, setCode]         = useState(editData?.code ?? '')
+  const [address, setAddress]   = useState(editData?.address ?? '')
+  const [sector, setSector]     = useState(editData?.sector ?? '')
+  const [city, setCity]         = useState(editData?.city ?? 'Santo Domingo')
+  const [units, setUnits]       = useState(String(editData?.total_units ?? 1))
+  const [amount, setAmount]     = useState(String(editData?.monthly_maintenance_amount ?? ''))
+  const [notes, setNotes]       = useState(editData?.notes ?? '')
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState<string | null>(null)
 
@@ -288,20 +320,26 @@ function NewBuildingModal({ onClose }: { onClose: () => void }) {
     setError(null)
 
     try {
-      const res = await fetch('/api/buildings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name, code: code || null, address: address || null, sector: sector || null,
-          city, total_units: parseInt(units),
-          monthly_maintenance_amount: parseFloat(amount), currency: 'DOP',
-          notes: notes || null,
-        }),
-      })
-      if (!res.ok) throw new Error((await res.json()).error)
-      window.location.reload()
+      const payload = {
+        name, code: code || null, address: address || null, sector: sector || null,
+        city, total_units: parseInt(units),
+        monthly_maintenance_amount: parseFloat(amount), currency: 'DOP',
+        notes: notes || null,
+      }
+      if (isEdit && editData) {
+        const { error: err } = await supabase.from('buildings').update(payload).eq('id', editData.id)
+        if (err) throw new Error(err.message)
+      } else {
+        const res = await fetch('/api/buildings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) throw new Error((await res.json()).error)
+      }
+      onSaved()
     } catch (err: any) {
-      setError(err.message ?? 'Error al crear el edificio')
+      setError(err.message ?? 'Error al guardar el edificio')
       setLoading(false)
     }
   }
@@ -311,8 +349,8 @@ function NewBuildingModal({ onClose }: { onClose: () => void }) {
       <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg">
         <div className="flex items-center justify-between p-5 border-b border-slate-200">
           <div>
-            <h2 className="font-bold text-slate-900 text-lg">Nuevo edificio</h2>
-            <p className="text-slate-500 text-sm">Registra un edificio y su fondo de mantenimiento</p>
+            <h2 className="font-bold text-slate-900 text-lg">{isEdit ? 'Editar edificio' : 'Nuevo edificio'}</h2>
+            <p className="text-slate-500 text-sm">{isEdit ? 'Actualiza los datos del edificio' : 'Registra un edificio y su fondo de mantenimiento'}</p>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
             <X className="w-5 h-5" />
@@ -397,7 +435,7 @@ function NewBuildingModal({ onClose }: { onClose: () => void }) {
             </button>
             <button type="submit" disabled={loading}
               className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-60">
-              {loading ? 'Guardando...' : 'Crear edificio'}
+              {loading ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear edificio'}
             </button>
           </div>
         </form>

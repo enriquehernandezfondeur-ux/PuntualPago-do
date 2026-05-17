@@ -25,18 +25,22 @@ export function FormModal({ title, subtitle, open, onClose, children, size = 'md
       onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
         className={cn('w-full rounded-2xl overflow-hidden shadow-2xl animate-fade-in', widths[size])}
         style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
       >
         {/* Header */}
         <div className="flex items-start justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
           <div>
-            <h2 className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{title}</h2>
+            <h2 id="modal-title" className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{title}</h2>
             {subtitle && <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{subtitle}</p>}
           </div>
           <button
             onClick={handleClose}
             disabled={loading}
+            aria-label="Cerrar"
             className="p-1 rounded-md transition mt-0.5 disabled:opacity-40 disabled:cursor-not-allowed"
             onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-subtle)')}
             onMouseLeave={e => (e.currentTarget.style.background = '')}

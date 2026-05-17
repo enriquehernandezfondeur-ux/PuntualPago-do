@@ -476,7 +476,7 @@ export function InquilinoPortalContent({
                   <PaymentStatusBadge status={p.status} />
                   {p.status === 'pagado' && (
                     <a
-                      href={`/cobros/recibo/${p.id}`}
+                      href={`/portal/inquilino/recibo/${p.id}`}
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition"

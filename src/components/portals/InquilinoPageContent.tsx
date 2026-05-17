@@ -128,7 +128,7 @@ export function InquilinoPageContent({ payments, tenantName }: Props) {
                 {p.paid_date && <div><p className="text-slate-400">Fecha pago</p><p className="font-medium text-slate-600">{formatDate(p.paid_date)}</p></div>}
               </div>
               {p.status === 'pagado' && (
-                <a href={`/cobros/recibo/${p.id}`} target="_blank" rel="noreferrer"
+                <a href={`/portal/inquilino/recibo/${p.id}`} target="_blank" rel="noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg">
                   <FileText className="w-3 h-3" /> Ver recibo
                 </a>
@@ -191,7 +191,7 @@ export function InquilinoPageContent({ payments, tenantName }: Props) {
                     <td className="px-4 py-3.5 text-center">
                       {p.status === 'pagado' ? (
                         <a
-                          href={`/cobros/recibo/${p.id}`}
+                          href={`/portal/inquilino/recibo/${p.id}`}
                           target="_blank"
                           rel="noreferrer"
                           className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition"
