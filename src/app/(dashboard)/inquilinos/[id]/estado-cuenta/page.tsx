@@ -22,7 +22,7 @@ export default async function EstadoCuentaPage({ params }: { params: { id: strin
       .limit(60),
     supabase.from('leases')
       .select('*, property:properties(name, address, city)')
-      .eq('tenant_id', params.id).eq('status', 'activo').single(),
+      .eq('tenant_id', params.id).eq('status', 'activo').maybeSingle(),
     supabase.from('settings').select('key, value'),
   ])
 

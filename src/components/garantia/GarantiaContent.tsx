@@ -40,7 +40,7 @@ export function GarantiaContent({ guarantees, openClaims, atRiskPayments, totalE
       // 1. Find the guarantee for this lease
       const { data: guarantee } = await supabase.from('guarantees')
         .select('id, guaranteed_amount, currency, total_exposure')
-        .eq('lease_id', payment.lease_id).eq('status', 'activa').single()
+        .eq('lease_id', payment.lease_id).eq('status', 'activa').maybeSingle()
       if (!guarantee) { alert('No se encontró una garantía activa para este contrato'); return }
 
       // 2. Create claim

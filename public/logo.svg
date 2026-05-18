@@ -9,15 +9,12 @@
     letter-spacing="1">PUNTUAL</text>
 
   <!-- Circle arc — almost complete, gap at bottom-left where text meets it -->
-  <!-- Center (270, 52), radius 42, arc from ~200° to ~170° clockwise = big arc -->
   <path d="M 234.5 37.6 A 42 42 0 1 1 233.6 66.8"
     stroke="#29A8E0" stroke-width="6" fill="none"
     stroke-linecap="round"/>
 
   <!-- Arrow inside circle — two triangular shapes, dark navy -->
-  <!-- Tall thin spike pointing up-right -->
   <polygon points="270,14  262,56  278,56" fill="#1D2D5B"/>
-  <!-- Small base triangle giving it the "clock hand" look -->
   <polygon points="256,60  284,60  270,52" fill="#1D2D5B"/>
 
   <!-- PAGO parallelogram band -->

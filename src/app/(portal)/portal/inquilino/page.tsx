@@ -57,7 +57,7 @@ export default async function InquilinoPortalPage() {
     supabase.from('settings').select('value').eq('key', 'usd_dop_rate').maybeSingle(),
     supabase
       .from('property_events')
-      .select('id, title, description, event_date, event_type, created_at')
+      .select('id, title, description, event_type, created_at')
       .in('visibility', ['inquilino', 'ambos'])
       .order('created_at', { ascending: false })
       .limit(10),

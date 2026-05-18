@@ -22,7 +22,7 @@ export default async function DashboardPage() {
     { data: properties },
     { data: rateSetting },
   ] = await Promise.all([
-    supabase.from('dashboard_stats').select('*').single(),
+    supabase.from('dashboard_stats').select('*').maybeSingle(),
     withOrg(supabase
       .from('payments')
       .select('*, tenant:tenants(full_name, phone, whatsapp), property:properties(name, address)')

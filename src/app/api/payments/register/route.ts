@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-const STAFF_ROLES = ['super_admin','admin','gerente_operativo','equipo_cobros','contabilidad','equipo_legal','equipo_mantenimiento','solo_lectura']
+const STAFF_ROLES = ['super_admin','admin','gerente_operativo','equipo_cobros','contabilidad','equipo_legal']
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
@@ -55,8 +55,8 @@ export async function POST(req: NextRequest) {
   const isFullPayment = newBalance <= 0
   const newStatus  = isFullPayment ? 'pagado' : payment.status
 
-  // total_due = rent + late_fee — mantener sincronizado para evitar violaciones de constraints
-  const correctTotalDue = payment.rent_amount + (payment.late_fee ?? 0)
+  // total_due = rent + late_fee − discount
+  const correctTotalDue = payment.rent_amount + (payment.late_fee ?? 0) - (payment.discount ?? 0)
 
   const { error: updateErr } = await supabase
     .from('payments')
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ paymentId }),
-    }).catch(() => {})
+    }).catch(err => console.error('[register] send-confirmation failed:', err))
   }
 
   // Recalculate risk score (fire and forget)
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tenantId: payment.tenant_id }),
-    }).catch(() => {})
+    }).catch(err => console.error('[register] risk/calculate failed:', err))
   }
 
   // Notify admins
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
       entityId:   paymentId,
       type:       'payment',
     }),
-  }).catch(() => {})
+  }).catch(err => console.error('[register] notifications/create failed:', err))
 
   return NextResponse.json({
     success:     true,

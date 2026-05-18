@@ -55,11 +55,13 @@ export function formatDate(date: string | Date, fmt = 'dd/MM/yyyy'): string {
   return format(new Date(date), fmt, { locale: es })
 }
 
-export function formatDateLong(date: string | Date): string {
+export function formatDateLong(date: string | Date | null | undefined): string {
+  if (!date) return '—'
   return format(new Date(date), "d 'de' MMMM, yyyy", { locale: es })
 }
 
-export function formatRelative(date: string | Date): string {
+export function formatRelative(date: string | Date | null | undefined): string {
+  if (!date) return '—'
   return formatDistanceToNow(new Date(date), { addSuffix: true, locale: es })
 }
 

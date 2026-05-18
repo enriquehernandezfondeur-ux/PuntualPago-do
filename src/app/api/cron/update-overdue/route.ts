@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
   // Traer todos los pagos pendientes con datos del contrato
   const { data: payments, error } = await supabase
     .from('payments')
-    .select('id, due_date, rent_amount, late_fee, days_overdue, status, lease_id, tenant_id, property_id, sent_to_legal, lease:leases(late_fee_percentage, late_fee_grace_days)')
+    .select('id, due_date, rent_amount, late_fee, days_overdue, status, lease_id, tenant_id, owner_id, property_id, sent_to_legal, amount_paid, lease:leases(late_fee_percentage, late_fee_grace_days, currency)')
     .not('status', 'in', '("pagado","en_legal","cubierto_garantia")')
     .order('due_date', { ascending: true })
 
@@ -84,7 +84,8 @@ export async function GET(req: NextRequest) {
       days_overdue: daysOverdue,
       late_fee:     newLateFee,
       total_due:    p.rent_amount + newLateFee,
-      balance_due:  p.rent_amount + newLateFee,  // Recalcular balance con mora
+      // Respetar pagos parciales ya registrados al recalcular la mora
+      balance_due:  Math.max(0, p.rent_amount + newLateFee - ((p as any).amount_paid ?? 0)),
       updated_at:   new Date().toISOString(),
     }
 
@@ -102,14 +103,18 @@ export async function GET(req: NextRequest) {
       const { error: legalErr } = await supabase
         .from('legal_cases')
         .upsert({
-          property_id:    p.property_id,
-          tenant_id:      p.tenant_id,
-          payment_id:     p.id,
-          status:         'prelegal',
-          amount_owed:    p.rent_amount + newLateFee,
-          days_overdue:   daysOverdue,
-          notes:          `Escalado automáticamente — ${daysOverdue} días de mora. Umbral: ${legalEscalationDays} días.`,
-          created_by:     null,
+          property_id:  p.property_id,
+          tenant_id:    p.tenant_id,
+          owner_id:     p.owner_id,
+          payment_id:   p.id,
+          status:       'prelegal',
+          reason:       'Mora automática',
+          amount_owed:  p.rent_amount + newLateFee,
+          currency:     (lease as any)?.currency ?? 'DOP',
+          opened_date:  today,
+          days_in_arrears: daysOverdue,
+          notes:        `Escalado automáticamente — ${daysOverdue} días de mora. Umbral: ${legalEscalationDays} días.`,
+          created_by:   null,
         }, { onConflict: 'payment_id', ignoreDuplicates: true })
 
       if (!legalErr) {
@@ -128,7 +133,7 @@ export async function GET(req: NextRequest) {
             entityType: 'legal_cases',
             type: 'legal',
           }),
-        }).catch(() => {})
+        }).catch(err => console.error('[update-overdue] notifications/create failed:', err))
       }
     }
   }

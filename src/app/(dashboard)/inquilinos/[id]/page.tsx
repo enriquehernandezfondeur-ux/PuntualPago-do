@@ -25,7 +25,7 @@ export default async function TenantProfilePage({ params }: { params: { id: stri
     supabase.from('documents').select('*').eq('tenant_id', params.id).order('created_at', { ascending: false }),
     supabase.from('legal_cases').select('*, property:properties(name)').eq('tenant_id', params.id).order('opened_date', { ascending: false }),
     supabase.from('maintenance_requests').select('*').eq('tenant_id', params.id).order('reported_date', { ascending: false }),
-    supabase.from('risk_scores').select('*').eq('entity_type', 'tenant').eq('entity_id', params.id).single(),
+    supabase.from('risk_scores').select('*').eq('entity_type', 'tenant').eq('entity_id', params.id).maybeSingle(),
   ])
 
   if (!tenant) notFound()

@@ -8,7 +8,7 @@ import { formatDate } from '@/lib/utils/format'
 interface Notification {
   id: string
   title: string
-  message?: string
+  body?: string
   type: string
   read_at?: string
   created_at: string
@@ -144,7 +144,7 @@ export function NotificationBell({ userId }: { userId: string }) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium" style={{ color: 'var(--text)', fontWeight: !n.read_at ? 600 : 400 }}>{n.title}</p>
-                      {n.message && <p className="text-xs mt-0.5 line-clamp-2" style={{ color: 'var(--text-tertiary)' }}>{n.message}</p>}
+                      {n.body && <p className="text-xs mt-0.5 line-clamp-2" style={{ color: 'var(--text-tertiary)' }}>{n.body}</p>}
                       <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>{formatDate(n.created_at)}</p>
                     </div>
                     {!n.read_at && <span className="w-2 h-2 rounded-full shrink-0 mt-1.5" style={{ background: '#1570EF' }} />}

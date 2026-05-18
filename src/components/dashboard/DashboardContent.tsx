@@ -379,7 +379,7 @@ export function DashboardContent({
                       </p>
                     </div>
                     <p className="text-xs font-medium shrink-0" style={{ color: priorityColor }}>
-                      {formatDate(task.due_date!)}
+                      {task.due_date ? formatDate(task.due_date) : '—'}
                     </p>
                   </div>
                 )

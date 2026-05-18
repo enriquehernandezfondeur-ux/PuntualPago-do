@@ -241,6 +241,7 @@ function LiquidacionesTab({ payouts, ownerId, ownerName }: {
   const [reference, setReference]   = useState('')
   const [paidDate, setPaidDate]     = useState(new Date().toISOString().split('T')[0])
   const [saving, setSaving]         = useState(false)
+  const [saveError, setSaveError]   = useState<string | null>(null)
   const [localPaid, setLocalPaid]   = useState<Set<string>>(new Set())
   const router = useRouter()
   const supabase = createClient()
@@ -251,6 +252,7 @@ function LiquidacionesTab({ payouts, ownerId, ownerName }: {
   async function confirmPayment() {
     if (!markTarget || !method) return
     setSaving(true)
+    setSaveError(null)
     try {
       const { error } = await supabase.from('owner_payouts').update({
         paid: true,
@@ -265,6 +267,8 @@ function LiquidacionesTab({ payouts, ownerId, ownerName }: {
       setMethod('')
       setReference('')
       router.refresh()
+    } catch (err: any) {
+      setSaveError(err?.message ?? 'Error al registrar el pago')
     } finally {
       setSaving(false)
     }
@@ -425,6 +429,7 @@ function LiquidacionesTab({ payouts, ownerId, ownerName }: {
                   {saving ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Guardando...</> : <><CheckCircle2 className="w-3.5 h-3.5" /> Confirmar</>}
                 </button>
               </div>
+              {saveError && <p className="text-xs text-red-500 mt-2">{saveError}</p>}
             </div>
           </div>
         </div>

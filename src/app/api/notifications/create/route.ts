@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   const notifications = users.map(u => ({
     user_id:     u.id,
     title,
-    message:     message ?? null,
+    body:        message ?? null,
     type,
     entity_type: entityType ?? null,
     entity_id:   entityId ?? null,

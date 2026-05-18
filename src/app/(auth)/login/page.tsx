@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     // Redirect based on role
     const { data: profile, error: profileError } = await supabase
-      .from('users').select('role').eq('id', data.user.id).single()
+      .from('users').select('role').eq('id', data.user.id).maybeSingle()
 
     if (profileError || !profile) {
       setError('Error al cargar tu perfil. Intenta de nuevo.')

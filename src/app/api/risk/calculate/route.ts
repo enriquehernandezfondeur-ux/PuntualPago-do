@@ -49,7 +49,7 @@ async function calculateTenantRisk(supabase: Awaited<ReturnType<typeof createCli
     .from('tenants')
     .select('estimated_income, income_currency, reference_1_name, reference_1_phone, reference_2_name, status')
     .eq('id', tenantId)
-    .single()
+    .maybeSingle()
 
   // Fetch lease for rent amount
   const { data: lease } = await supabase
@@ -57,7 +57,7 @@ async function calculateTenantRisk(supabase: Awaited<ReturnType<typeof createCli
     .select('rent_amount, currency')
     .eq('tenant_id', tenantId)
     .eq('status', 'activo')
-    .single()
+    .maybeSingle()
 
   // Fetch documents
   const { count: docCount } = await supabase
@@ -116,19 +116,22 @@ async function calculateTenantRisk(supabase: Awaited<ReturnType<typeof createCli
   // ── 4. Income score (10 pts) ────────────────────────────
   let incomeScore = 0 // Sin datos de ingreso = 0 pts (no asumir nada)
   if (tenant?.estimated_income && lease?.rent_amount) {
-    // Solo calcular ratio si las monedas coinciden — mezclar USD y DOP da ratio falso
     const incomeCurrency = (tenant as any).income_currency ?? 'DOP'
     const leaseCurrency  = (lease as any).currency ?? 'DOP'
+    let normalizedIncome = tenant.estimated_income
+    // Convertir USD → DOP usando tasa fija (60 DOP/USD) cuando las monedas no coinciden
     if (incomeCurrency !== leaseCurrency) {
-      incomeScore = 0 // Sin datos comparables — monedas distintas
-    } else {
-      const ratio = tenant.estimated_income / lease.rent_amount
-      if (ratio >= 4)      incomeScore = 10
-      else if (ratio >= 3) incomeScore = 8
-      else if (ratio >= 2) incomeScore = 5
-      else if (ratio >= 1) incomeScore = 2
-      else                  incomeScore = 0
+      const USD_DOP_RATE = 60
+      normalizedIncome = incomeCurrency === 'USD'
+        ? tenant.estimated_income * USD_DOP_RATE
+        : tenant.estimated_income / USD_DOP_RATE
     }
+    const ratio = normalizedIncome / lease.rent_amount
+    if (ratio >= 4)      incomeScore = 10
+    else if (ratio >= 3) incomeScore = 8
+    else if (ratio >= 2) incomeScore = 5
+    else if (ratio >= 1) incomeScore = 2
+    else                  incomeScore = 0
   }
 
   // ── 5. Documents score (10 pts) ─────────────────────────
